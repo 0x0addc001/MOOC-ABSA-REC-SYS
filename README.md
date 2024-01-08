@@ -112,7 +112,7 @@ npm install
 ```bash
 npm run dev
 ```
-ps:看到App running at:Local: http://localhost:9528代表项目启动成功。此时访问http://localhost:9528即可进入情感分析Web系统
+ps:看到App running at:Local: http://localhost:9528代表项目启动成功。此时访问http://localhost:9528即可进入系统
 
 ## 3.3 项目使用说明
 
