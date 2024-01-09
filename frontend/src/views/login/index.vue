@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">基于UIE的舆情情感分析系统</h3>
+        <h3 class="title">慕课评论方面级情感分析与推荐系统</h3>
       </div>
 
       <el-form-item prop="username">

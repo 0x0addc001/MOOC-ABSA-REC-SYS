@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '基于UIE的舆情情感分析与推荐系统',
+  title: '慕课评论方面级情感分析与推荐系统',
 
   /**
    * @type {boolean} true | false
