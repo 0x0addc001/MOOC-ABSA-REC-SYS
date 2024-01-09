@@ -18,13 +18,13 @@ def predict(input_text,schema):
     Predict based on Taskflow.
     """
     # 单条文本情感分析
-    senta = Taskflow("sentiment_analysis", model="uie-senta-base", schema=schema)
+    senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema)
     # predict with Taskflow
     results = senta(input_text)
     # 如果语句中没有属性词，只有情感词，则调用语句级情感分析
     if results==[{}]:
         schema2 = ['情感倾向[正向，负向]']
-        senta2 = Taskflow("sentiment_analysis", model="uie-senta-base", schema=schema2)
+        senta2 = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema2)
         results = senta2(input_text)
         sentiment = results[0]['情感倾向[正向，负向]'][0]['text']
         results = [{"aspect": 'None', "opinions": input_text, "sentiment": sentiment}]
@@ -45,12 +45,12 @@ def batchPredict(file_path,schema):
     examples = load_txt(file_path)
 
     # 批量情感分析
-    senta = Taskflow("sentiment_analysis", model="uie-senta-base", schema=schema,
+    senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
                       batch_size=4, max_seq_len=512)
     # predict with Taskflow
     results = senta(examples)
     # 保存结果
-    save_path = os.path.join('./outputs', "sentiment_results.json")
+    save_path = os.path.join('backend/outputs', "sentiment_results.json")
     write_json_file(results, save_path)
     print("The results of sentiment analysis has been saved to: {}".format(save_path))
     # 将结果输出并以list形式保存到consequence中
