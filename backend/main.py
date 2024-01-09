@@ -149,7 +149,7 @@ async def BatchEmotionAnalysis(file: UploadFile):
         fout.close()
         # 批量文本情感分析
         batchAnalysisResults = batchPredict(filePath,schema)
-        sr = SentimentResult('./outputs/sentiment_results.json')
+        sr = SentimentResult('backend/outputs/sentiment_results.json')
         # 属性频率词云图数据
         aspect_wc_data = []
         for item in sr.aspect_frequency:

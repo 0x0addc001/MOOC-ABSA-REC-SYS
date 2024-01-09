@@ -27,10 +27,16 @@ conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/m
 conda config --set show_channel_urls yes
 ```
 
-创建新虚拟环境便于隔离，环境名为paddlepaddle，python版本为3.7
+安装paddlepaddle
 
 ```bash
-conda create -n paddlepaddle python=3.7
+conda install paddlepaddle==2.6.0 --channel https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/Paddle/
+```
+
+创建新虚拟环境便于隔离，环境名为paddlepaddle，python版本为3.9
+
+```bash
+conda create -n paddlepaddle python=3.9
 ```
 
 进入刚才创建的虚拟环境paddlepaddle，需注意后续环境配置操作都将在该环境中进行配置！！！
@@ -44,10 +50,10 @@ paddle官网下载地址（根据型号等进行选择）：
 https://www.paddlepaddle.org.cn/install/quick?docurl=/documentation/docs/zh/install/pip/linux-pip.html
 若安装GPU版本需要先配置cuda和cudnn，参考教程：
 https://aistudio.baidu.com/aistudio/projectdetail/696822?channelType=0&channel=0
-下面给出PaddlePaddle 2.3 CPU版本 Windows下pip的下载命令（具体建议以官网提供的为准）：
+下面给出PaddlePaddle 2.6.0 CPU版本 Windows下pip的下载命令（具体建议以官网提供的为准）：
 
 ```bash
-python -m pip install paddlepaddle==2.3.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+python -m pip install paddlepaddle==2.6.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 paddle测试是否安装成功，在命令行中依次输入：
