@@ -35,8 +35,8 @@ export default {
               left: 'center',
               top: 'center',
               style: {
-                text: '基于UIE的舆情情感分析与推荐系统',
-                fontSize: 90,
+                text: '慕课评论方面级情感分析与推荐系统',
+                fontSize: 70,
                 fontWeight: 'bold',
                 lineDash: [0, 200],
                 lineDashOffset: 0,
