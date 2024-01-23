@@ -1,11 +1,11 @@
 import MySQLdb
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from utils.parser import get_courses_url, paser_comments
+from utils.parser import get_courses_url, parser_comments
 from utils.saver import saver
 
 
-def main(input_course_name):
+def main(course_key):
     '''
     @description: This is the main function to set the database info and load the webdriver, then start the crawler
     '''
@@ -24,7 +24,7 @@ def main(input_course_name):
     driver = webdriver.Chrome(options=options)
     driver.maximize_window()
 
-    course_url = 'https://www.icourse163.org/search.htm?search='+input_course_name+'#/'  # todo
+    course_url = 'https://www.icourse163.org/search.htm?search=' + course_key + '#/'
     university_link_list = get_courses_url(course_url, driver)
     for university_link in university_link_list:
         try:
@@ -32,9 +32,9 @@ def main(input_course_name):
             url = university_link[1]
 
             course_name, teacher_name, url, userid_list, names_list, comments_list, created_time_list, course_time_list, voteup_list, \
-            rating_list = paser_comments(url, driver)
+            rating_list = parser_comments(url, driver)
 
-            saver(course_name, university_name, teacher_name, url, userid_list, names_list, comments_list,
+            saver(course_key, course_name, university_name, teacher_name, url, userid_list, names_list, comments_list,
                   created_time_list, course_time_list, voteup_list, rating_list,
                   conn, cursor)
 

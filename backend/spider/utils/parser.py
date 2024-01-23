@@ -60,7 +60,7 @@ def get_courses_url(course_url, driver):
     return university_link_list
 
 
-def paser_comments(url, driver):
+def parser_comments(url, driver):
     '''
     @description: get the course comments info from the course page
     @param {"url":course_url,"driver":chrome driver}
@@ -71,7 +71,7 @@ def paser_comments(url, driver):
     soup = BeautifulSoup(cont, 'html.parser')
 
     find_comments = driver.find_element(by=By.ID, value=
-    "review-tag-button")  # click the comments_test tag
+    "review-tag-button")  # click the comment tag
     find_comments.click()
     time.sleep(1)
 
@@ -96,7 +96,7 @@ def paser_comments(url, driver):
             # use bs4 to locate the comments
             content = soup.find_all('div', {
                 'class':
-                    'ux-mooc-comments_test-course-comment_comment-list_item_body'
+                    'ux-mooc-comment-course-comment_comment-list_item_body'
             })
 
             for ctt in content:
@@ -104,22 +104,22 @@ def paser_comments(url, driver):
                 author_name = ctt.find_all(
                     'a', {
                         'class':
-                            'primary-link ux-mooc-comments_test-course-comment_comment-list_item_body_user-info_name'
+                            'primary-link ux-mooc-comment-course-comment_comment-list_item_body_user-info_name'
                     })
                 comments = ctt.find_all(
                     'div', {
                         'class':
-                            'ux-mooc-comments_test-course-comment_comment-list_item_body_content'
+                            'ux-mooc-comment-course-comment_comment-list_item_body_content'
                     })
                 created_time = ctt.find_all(
                     'div', {
                         'class':
-                            'ux-mooc-comments_test-course-comment_comment-list_item_body_comment-info_time'
+                            'ux-mooc-comment-course-comment_comment-list_item_body_comment-info_time'
                     })
                 course_times = ctt.find_all(
                     'div', {
                         'class':
-                            'ux-mooc-comments_test-course-comment_comment-list_item_body_comment-info_term-sign'
+                            'ux-mooc-comment-course-comment_comment-list_item_body_comment-info_term-sign'
                     })
                 voteup = ctt.find_all('span', {'primary-link'})
                 rating = ctt.find_all('div', {"star-point"})
@@ -154,7 +154,7 @@ def paser_comments(url, driver):
             #     content = soup.find_all(
             #         'div', {
             #             'class':
-            #             'ux-mooc-comments_test-course-comment_comment-list_item_body'
+            #             'ux-mooc-comment-course-comment_comment-list_item_body'
             #         })
             #
             #     for ctt in content:
@@ -162,22 +162,22 @@ def paser_comments(url, driver):
             #         author_name = ctt.find_all(
             #             'a', {
             #                 'class':
-            #                 'primary-link ux-mooc-comments_test-course-comment_comment-list_item_body_user-info_name'
+            #                 'primary-link ux-mooc-comment-course-comment_comment-list_item_body_user-info_name'
             #             })
             #         comments = ctt.find_all(
             #             'div', {
             #                 'class':
-            #                 'ux-mooc-comments_test-course-comment_comment-list_item_body_content'
+            #                 'ux-mooc-comment-course-comment_comment-list_item_body_content'
             #             })
             #         created_time = ctt.find_all(
             #             'div', {
             #                 'class':
-            #                 'ux-mooc-comments_test-course-comment_comment-list_item_body_comment-info_time'
+            #                 'ux-mooc-comment-course-comment_comment-list_item_body_comment-info_time'
             #             })
             #         course_times = ctt.find_all(
             #             'div', {
             #                 'class':
-            #                 'ux-mooc-comments_test-course-comment_comment-list_item_body_comment-info_term-sign'
+            #                 'ux-mooc-comment-course-comment_comment-list_item_body_comment-info_term-sign'
             #             })
             #         voteup = ctt.find_all('span', {'primary-link'})
             #         rating = ctt.find_all('div', {"star-point"})
@@ -186,8 +186,8 @@ def paser_comments(url, driver):
             #             userid_list.append(userid.get('href').split('=')[-1])
             #         for name in author_name:
             #             names_list.append(name.text)
-            #         for comments_test in comments:
-            #             comments_list.append(comments_test.text.strip('\n'))
+            #         for comment in comments:
+            #             comments_list.append(comment.text.strip('\n'))
             #         for ct in created_time:
             #             created_time_list.append(ct.text)
             #         for cts in course_times:

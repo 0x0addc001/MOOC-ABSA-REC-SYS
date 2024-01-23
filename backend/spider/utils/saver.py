@@ -1,5 +1,5 @@
 
-def saver(course_name, university_name, teacher_name, url, userid_list, name_list,
+def saver(course_key, course_name, university_name, teacher_name, url, userid_list, name_list,
           comments_list, created_time_list, course_time_list, voteup_list, rating_list,
           conn, cursor):
     '''
@@ -17,20 +17,20 @@ def saver(course_name, university_name, teacher_name, url, userid_list, name_lis
         voteup = voteup_list[i]
         rating = rating_list[i]
         line = [
-             course_name, university_name, teacher_name, url, userid, author_name, comments,
+             course_key, course_name, university_name, teacher_name, url, userid, author_name, comments,
             created_time, course_time, voteup, rating
         ]
 
         print(line)
 
         insert_sql = """
-                        insert into raw_comments(course_name, university_name, teacher_name, url, userid,author_name, comments, created_time, course_time, voteup, rating)
-                        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                        insert into raw_comments(course_key, course_name, university_name, teacher_name, url, userid, author_name, comments, created_time, course_time, voteup, rating)
+                        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                      """
 
         cursor.execute(
             insert_sql,
-            (course_name, university_name, teacher_name, url, userid, author_name,
+            (course_key, course_name, university_name, teacher_name, url, userid, author_name,
              comments, created_time, course_time, voteup, rating))
 
         conn.commit()
