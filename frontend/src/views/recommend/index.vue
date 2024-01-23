@@ -2,17 +2,26 @@
   <div class="app-container">
     <el-card class="box-card">
       <div class="tip">
-        请输入要进行方面级情感分析的文本:
+        请选择您感兴趣的课程:
       </div>
-      <el-input v-model="textarea" type="textarea" :disabled="stage" :rows="6" placeholder="请输入要进行方面级情感分析的文本" clearable />
+      <div style="text-align: center;">
+        <el-select v-model="value" placeholder="请选择课程" style="padding-top:50px;padding-bottom:50px;">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+        </el-select>
+      </div>
     </el-card>
     <div style="text-align: center; padding-top:20px; padding-bottom:20px;">
       <el-button type="info" round @click="clear()">清空内容</el-button>
-      <el-button type="primary" round @click="emotionAnalysis()">情感分析</el-button>
+      <el-button type="primary" round @click="recommend()">推荐课程</el-button>
     </div>
     <el-card v-show="visible" class="box-card">
       <div v-show="visible" class="tip">
-        方面级情感分析结果:
+        推荐结果:
       </div>
       <!-- <el-input v-show="visible" v-model="result" type="textarea" :rows="13" /> -->
       <el-table
@@ -48,18 +57,32 @@ export default {
       textarea: '', // 用户输入框内输入内容
       analysisResult: '', // 情感分析结果
       stage: false,
-      visible: false // 设置情感分析结果的可见性
+      visible: false, // 设置情感分析结果的可见性
+      options: [{
+          value: '数据结构',
+          label: '数据结构'
+        }, {
+          value: '操作系统',
+          label: '操作系统'
+        }, {
+          value: '计算机组成原理',
+          label: '计算机组成原理'
+        }, {
+          value: '计算机网络',
+          label: '计算机网络'
+        }],
+        value: ''
     }
   },
   methods: {
     clear() {
       var that = this
-      that.textarea = ''
+      that.value = ''
       that.analysisResult = ''
       that.visible = false
       that.$message({
         showClose: true,
-        message: '文本内容已清空！',
+        message: '选择内容已清空！',
         type: 'success'
       })
     },

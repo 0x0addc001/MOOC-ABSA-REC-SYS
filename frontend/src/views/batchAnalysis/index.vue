@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="box-card">
       <div class="tip">
-        请上传要进行批量分析的txt文件
+        请上传要进行批量分析的txt文件:
       </div>
       <el-upload
         class="upload-demo"
@@ -226,7 +226,7 @@ export default {
     // 图1
     aspect_wc_visual() {
       var that = this
-      that.aw_visible = true;  that.ah_visible = false;   that.aow_visible = false;
+      that.aw_visible = true; that.ah_visible = false; that.aow_visible = false;
       that.aoh_visible = false; that.asw_visible = false; that.ash_visible = false;
       var aspect_wc_chart = echarts.init(this.$refs.aspect_wc);
       var aspect_wc_option = {
