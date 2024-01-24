@@ -1,6 +1,6 @@
 """
     demo演示程序：
-    使用Taskflow进行属性级情感分析
+    使用Taskflow进行方面级情感分析
     单文本情感分析：针对输入的语句进行单文本情感分析
     批量文本情感分析：读取txt文件内容后进行批量情感分析
 """
@@ -10,7 +10,7 @@ import os
 import paddle
 from paddlenlp import Taskflow
 from utils import write_json_file
-from utils import format_results,format_print,load_txt
+from utils import format_results,format_print,load_txt,load_db
 
 # 单条文本情感分析预测函数
 def predict(input_text,schema):
@@ -21,7 +21,7 @@ def predict(input_text,schema):
     senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema)
     # predict with Taskflow
     results = senta(input_text)
-    # 如果语句中没有属性词，只有情感词，则调用语句级情感分析
+    # 如果语句中没有方面词，只有情感词，则调用语句级情感分析
     if results==[{}]:
         schema2 = ['情感倾向[正向，负向]']
         senta2 = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema2)
@@ -50,7 +50,32 @@ def batchPredict(file_path,schema):
     # predict with Taskflow
     results = senta(examples)
     # 保存结果
-    save_path = os.path.join('backend/outputs', "sentiment_results.json")
+    save_path = os.path.join('./outputs', "sentiment_results.json")
+    write_json_file(results, save_path)
+    print("The results of sentiment analysis has been saved to: {}".format(save_path))
+    # 将结果输出并以list形式保存到consequence中
+    results = format_results(results)
+    # 返回预测结果
+    return results
+
+# 数据库情感分析预测函数
+def dbPredict(course_key,schema,cursor):
+    """
+    Predict based on Taskflow.
+    """
+    examples = load_db(course_key,cursor)
+
+    # 批量情感分析
+    senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
+                      batch_size=4, max_seq_len=512)
+    # predict with Taskflow
+    results = senta(examples)
+
+    # 去除空值
+    results = [i for i in results if bool(i)]
+
+    # 保存结果
+    save_path = os.path.join('./outputs', "sentiment_results.json")
     write_json_file(results, save_path)
     print("The results of sentiment analysis has been saved to: {}".format(save_path))
     # 将结果输出并以list形式保存到consequence中
@@ -72,7 +97,7 @@ if __name__== "__main__" :
     format_print(result_text_2)
 
     # 读取txt文件内容进行批量情感分析
-    file_path = 'backend/textresource/test_hotel_small.txt'
+    file_path = './textresource/test_hotel_small.txt'
     # 批量文本情感分析
     result_batch = batchPredict(file_path,schema)
     format_print(result_batch)

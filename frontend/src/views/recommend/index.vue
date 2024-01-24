@@ -1,13 +1,20 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
-      <div class="tip">
+      <div class="tip" style="text-align: center;">
         请选择您感兴趣的课程:
-      </div>
-      <div style="text-align: center;">
-        <el-select v-model="value" placeholder="请选择课程" style="padding-top:50px;padding-bottom:50px;">
+        <el-select v-model="course_value" placeholder="请选择课程">
         <el-option
-          v-for="item in options"
+          v-for="item in course_options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+        </el-select>
+        &nbsp;&nbsp;&nbsp;请选择您关注的方面:
+        <el-select v-model="class_value" placeholder="请选择方面">
+        <el-option
+          v-for="item in class_options"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -58,7 +65,7 @@ export default {
       analysisResult: '', // 情感分析结果
       stage: false,
       visible: false, // 设置情感分析结果的可见性
-      options: [{
+      course_options: [{
           value: '数据结构',
           label: '数据结构'
         }, {
@@ -71,13 +78,28 @@ export default {
           value: '计算机网络',
           label: '计算机网络'
         }],
-        value: ''
+        course_value: '',
+        class_options: [{
+          value: '老师',
+          label: '老师'
+        }, {
+          value: '设计',
+          label: '设计'
+        }, {
+          value: '内容',
+          label: '内容'
+        }, {
+          value: '清晰',
+          label: '清晰'
+        }],
+        class_value: ''
     }
   },
   methods: {
     clear() {
       var that = this
-      that.value = ''
+      that.course_value = ''
+      that.class_value = ''
       that.analysisResult = ''
       that.visible = false
       that.$message({

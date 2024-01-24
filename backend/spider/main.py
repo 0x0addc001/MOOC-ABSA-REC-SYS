@@ -38,6 +38,8 @@ def main(course_key):
                   created_time_list, course_time_list, voteup_list, rating_list,
                   conn, cursor)
 
+            break    # todo 测试阶段：只爬一门课程
+
         except Exception:
             print("Error: ", university_link)
             continue
