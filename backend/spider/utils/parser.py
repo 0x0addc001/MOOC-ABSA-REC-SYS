@@ -43,7 +43,7 @@ def get_courses_url(course_url, driver):
                 except Exception:
                     continue
 
-        break  # todo
+        break  # todo 测试阶段：不翻页
 
         # # auto click the next page
         # next_page = driver.find_element(by=By.XPATH, value=
@@ -139,7 +139,7 @@ def parser_comments(url, driver):
                 for r in rating:
                     rating_list.append(str((len(r) - 13) / 2))
 
-            break  # todo
+            break  # todo 测试阶段：不翻页
 
             # # auto click the next page
             # next_page = driver.find_element(by=By.XPATH, value=

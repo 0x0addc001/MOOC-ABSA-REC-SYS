@@ -26,6 +26,22 @@ def load_txt(file_path):
             texts.append(line.strip())
     return texts
 
+def load_db(course_key, cursor):
+    texts = []
+    try:
+        select_sql = """
+                        select comments from mooc.raw_comments where course_key = %s
+                     """
+        cursor.execute(select_sql, (course_key,))
+        comments_list = cursor.fetchall()
+        for comment in comments_list:
+            texts.append(comment[0])
+        print(texts)
+        return texts
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
 def write_json_file(examples, save_path):
     with open(save_path, "w", encoding="utf-8") as f:
         for example in examples:
