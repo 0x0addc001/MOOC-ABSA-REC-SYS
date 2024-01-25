@@ -22,10 +22,10 @@
         </el-select>
       </div>
     </el-card>
-    <div style="text-align: center; padding-top:20px; padding-bottom:20px;">
+    <el-row style="text-align: center; padding-top:20px; padding-bottom:20px;">
       <el-button type="info" round @click="clear()">清空内容</el-button>
       <el-button type="primary" round @click="recommend()">推荐课程</el-button>
-    </div>
+    </el-row>
     <el-card v-show="visible" class="box-card">
       <div v-show="visible" class="tip">
         推荐结果:

@@ -42,6 +42,22 @@ def load_db(course_key, cursor):
         print(f"An error occurred: {e}")
         return None
 
+def save_results_to_db(results, conn, cursor):
+    for res in results:
+        aspect = res['aspect']
+        opinion = res['opinions']
+        sentiment = res['sentiment']
+        insert_sql = """
+                                insert into absa_comments(raw_id, aspect, opinion, sentiment)
+                                values(%s,%s,%s,%s)
+                             """
+        cursor.execute(
+            insert_sql,
+            (1, aspect, opinion, sentiment))
+        conn.commit()
+        print("{}-{}-{}: saving to database successful".format(
+            aspect, opinion, sentiment))
+
 def write_json_file(examples, save_path):
     with open(save_path, "w", encoding="utf-8") as f:
         for example in examples:

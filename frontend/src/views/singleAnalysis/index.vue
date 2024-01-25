@@ -2,14 +2,14 @@
   <div class="app-container">
     <el-card class="box-card">
       <div class="tip">
-        请输入要进行方面级情感分析的文本:
+        请输入要进行方面级情感分析的评论:
       </div>
       <el-input v-model="textarea" type="textarea" :disabled="stage" :rows="6" placeholder="请输入要进行方面级情感分析的文本" clearable />
     </el-card>
-    <div style="text-align: center; padding-top:20px; padding-bottom:20px;">
+    <el-row style="text-align: center; padding-top:20px; padding-bottom:20px;">
       <el-button type="info" round @click="clear()">清空内容</el-button>
       <el-button type="primary" round @click="emotionAnalysis()">情感分析</el-button>
-    </div>
+    </el-row>
     <el-card v-show="visible" class="box-card">
       <div v-show="visible" class="tip">
         方面级情感分析结果:
