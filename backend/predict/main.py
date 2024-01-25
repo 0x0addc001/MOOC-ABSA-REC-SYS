@@ -1,19 +1,16 @@
 """
-    demo演示程序：
+    predict演示程序：
     使用Taskflow进行方面级情感分析
     单文本情感分析：针对输入的语句进行单文本情感分析
     批量文本情感分析：读取txt文件内容后进行批量情感分析
 """
-
-# 导入所需依赖
 import os
-import paddle
 from paddlenlp import Taskflow
-from utils import write_json_file
-from utils import format_results,format_print,load_txt,load_db
+from backend.predict.utils import write_json_file,format_results,format_print,load_txt,load_db,save_results_to_db
+import MySQLdb
 
 # 单条文本情感分析预测函数
-def predict(input_text,schema):
+def singlePredict(input_text, schema):
     """
     Predict based on Taskflow.
     """
@@ -59,29 +56,49 @@ def batchPredict(file_path,schema):
     return results
 
 # 数据库情感分析预测函数
-def dbPredict(course_key,schema,cursor):
+def dbPredict(course_key,schema):
     """
     Predict based on Taskflow.
     """
-    examples = load_db(course_key,cursor)
+    try:
+        conn = MySQLdb.connect(
+            host='127.0.0.1',
+            port=3306,
+            user='root',
+            password='root',
+            db='mooc',
+            charset='utf8',
+            use_unicode=True
+        )
+        cursor = conn.cursor()
 
-    # 批量情感分析
-    senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
-                      batch_size=4, max_seq_len=512)
-    # predict with Taskflow
-    results = senta(examples)
+        examples = load_db(course_key, cursor)
 
-    # 去除空值
-    results = [i for i in results if bool(i)]
+        # 批量情感分析
+        senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
+                         batch_size=4, max_seq_len=512)
+        # predict with Taskflow
+        results = senta(examples)
 
-    # 保存结果
-    save_path = os.path.join('./outputs', "sentiment_results.json")
-    write_json_file(results, save_path)
-    print("The results of sentiment analysis has been saved to: {}".format(save_path))
-    # 将结果输出并以list形式保存到consequence中
-    results = format_results(results)
-    # 返回预测结果
-    return results
+        # 去除空值
+        results = [i for i in results if bool(i)]
+
+        # 保存结果
+        save_path = os.path.join('./outputs', "sentiment_results.json")
+        write_json_file(results, save_path)
+        print("The results of sentiment analysis has been saved to: {}".format(save_path))
+        # 将结果输出并以list形式保存到consequence中
+        results = format_results(results)
+        save_results_to_db(results, conn, cursor)
+
+        # 返回预测结果
+        return results
+    except Exception as e:
+        print("异常信息：", e)
+        conn.rollback()
+    finally:
+        cursor.close()
+        conn.close()
 
 if __name__== "__main__" :
     # 定义schema
@@ -89,11 +106,11 @@ if __name__== "__main__" :
 
     # 单条文本情感分析
     input_text_1 = "环境装修不错，也很干净，前台服务非常好"
-    result_text_1 = predict(input_text_1,schema)
+    result_text_1 = singlePredict(input_text_1, schema)
     format_print(result_text_1)
 
     input_text_2 = "蛋糕味道不错，很好吃，店家很耐心，服务也很好，很棒"
-    result_text_2 = predict(input_text_2,schema)
+    result_text_2 = singlePredict(input_text_2, schema)
     format_print(result_text_2)
 
     # 读取txt文件内容进行批量情感分析

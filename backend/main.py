@@ -2,38 +2,23 @@
     基于FastAPI的方面级情感分析后端模块
     先加载观点抽取和情感分析模型预热后再启动后端接口服务
 """
+import uvicorn
+import time
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
-import time
-
-import paddle
-from paddlenlp import Taskflow
-from utils import format_print
-from demo import predict,batchPredict,dbPredict
 from collections import defaultdict
-from utils import load_json_file
-import MySQLdb
+from backend.predict.utils import format_print,load_json_file
+from backend.predict.main import singlePredict,batchPredict,dbPredict
+from spider.main import spider_to_db
 
 def main():
     schema = [{"评价维度": ["观点词", "情感倾向[正向,负向,未提及]"]}]
 
     # 模型预热，方面级情感分析
     input_text = "环境装修不错，也很干净，前台服务非常好"
-    result_text = predict(input_text, schema)
+    result_text = singlePredict(input_text, schema)
     format_print(result_text)
-
-    conn = MySQLdb.connect(
-        host='127.0.0.1',
-        port=3306,
-        user='root',
-        password='root',
-        db='mooc',
-        charset='utf8',
-        use_unicode=True
-    )
-    cursor = conn.cursor()
 
     class SentimentResult:
         """
@@ -133,7 +118,7 @@ def main():
             # 获取用户输入的要进行方面级情感分析的文本内容
             input_text = document.text
             # 调用加载好的模型进行方面级情感分析
-            singleAnalysisResult = predict(input_text, schema)
+            singleAnalysisResult = singlePredict(input_text, schema)
             # 接口结果返回
             results = {"message": "success", "inputText": document.text, "singleAnalysisResult": singleAnalysisResult}
             return results
@@ -253,7 +238,7 @@ def main():
             # 获取用户选择的课程关键词
             course_key = document.text
             # 数据库评论情感分析
-            dbAnalysisResults = dbPredict(course_key, schema, cursor)
+            dbAnalysisResults = dbPredict(course_key, schema)
             sr = SentimentResult('./outputs/sentiment_results.json')
             # 方面频率词云图数据
             aspect_wc_data = []
@@ -335,6 +320,21 @@ def main():
         except Exception as e:
             print("异常信息：", e)
             raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
+
+    # 数据库爬虫接口
+    @app.post("/v1/spiderToDb/", status_code=200)
+    # 定义路径操作函数，当接口被访问将调用该函数
+    async def spiderToDb(document: Document):
+         try:
+             # 获取用户选择的课程关键词
+             course_key = document.text
+             # 数据库数据爬取
+             spider_to_db(course_key)
+             return {"message": "success"}
+         except Exception as e:
+             print("异常信息：", e)
+             raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
+
 
     # 启动创建的实例app，设置启动ip和端口号
     uvicorn.run(app, host="127.0.0.1", port=8000)

@@ -16,7 +16,7 @@
         <i class="el-icon-upload" />
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       </el-upload>
-      <el-row style="text-align: center; padding-top:20px;padding-bottom:10px;">
+      <el-row style="text-align: center; padding-top:20px;padding-bottom:20px;">
         <el-button type="info" round @click="clear()">清空内容</el-button>
         <el-button type="primary" round @click="batchEmotionAnalysis()">情感分析</el-button>
         <el-button type="success" round @click="saveResult()">保存结果</el-button>

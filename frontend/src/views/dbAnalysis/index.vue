@@ -2,27 +2,24 @@
 <template>
   <div class="app-container">
     <el-card class="box-card">
-      <div class="tip">
-        请选择要进行爬取数据或情感分析的课程:
-      </div>
-      <div style="text-align: center;">
-        <el-select v-model="value" placeholder="请选择课程" style="padding-top:50px;padding-bottom:50px;">
+      <div class="tip" style="text-align: center;">
+        请选择要进行数据爬取或情感分析的课程:
+        <el-select v-model="value" placeholder="请选择课程">
         <el-option
           v-for="item in options"
           :key="item.value"
           :label="item.label"
           :value="item.value">
         </el-option>
-      </el-select>
-      <el-row style="text-align: center; padding-top:10px;padding-bottom:50px;">
-        <el-button type="info" round @click="clear()">清空内容</el-button>
-        <el-button type="primary" round @click="scrawl2db()">爬取数据</el-button>
-        <el-button type="primary" round @click="dbEmotionAnalysis()">情感分析</el-button>
-        <el-button type="success" round @click="saveResult()">保存结果</el-button>
-      </el-row>
+        </el-select>
       </div>
     </el-card>
-    <el-row style="text-align: center; padding-top:10px;padding-bottom:10px;"></el-row>
+    <el-row style="text-align: center; padding-top:20px;padding-bottom:20px;">
+        <el-button type="info" round @click="clear()">清空内容</el-button>
+        <el-button type="success" round @click="spiderToDb()">数据爬取</el-button>
+        <el-button type="primary" round @click="dbEmotionAnalysis()">情感分析</el-button>
+        <!-- <el-button type="success" round @click="saveResult()">保存结果</el-button> -->
+    </el-row>
     <el-card v-show="visible" class="box-card">
       <div v-show="visible" class="tip">
         数据库情感分析结果：
@@ -135,27 +132,27 @@ export default {
       })
     },
     // 保存结果
-    saveResult() {
-      var tempData = this.analysisResults
-      if (tempData === '') {
-        this.$message({
-          showClose: true,
-          message: '情感分析结果内容为空！',
-          type: 'warning'
-        })
-      } else {
-        this.Excels.exportExcel('批量情感分析结果.xlsx', '#excel')
-        this.$message({
-          showClose: true,
-          message: '情感分析结果保存成功！',
-          type: 'success'
-        })
-      }
-    },
+    // saveResult() {
+    //   var tempData = this.analysisResults
+    //   if (tempData === '') {
+    //     this.$message({
+    //       showClose: true,
+    //       message: '情感分析结果内容为空！',
+    //       type: 'warning'
+    //     })
+    //   } else {
+    //     this.Excels.exportExcel('批量情感分析结果.xlsx', '#excel')
+    //     this.$message({
+    //       showClose: true,
+    //       message: '情感分析结果保存成功！',
+    //       type: 'success'
+    //     })
+    //   }
+    // },
     // 数据库情感分析
     dbEmotionAnalysis() {
       var that = this
-      // 判断用户是否已经选择要上传的文件
+      // 判断用户是否已经选择要进行数据库情感分析的课程
       if (that.value === '') {
         this.$message({
           showClose: true,
@@ -197,6 +194,42 @@ export default {
         console.log(error)
         that.analysisResults = ''
         that.visible = false
+        that.$message({
+          showClose: true,
+          message: '请求异常，请检查后端服务模块！',
+          type: 'error'
+        })
+      })
+    },
+    // 数据库数据爬取
+    spiderToDb() {
+      var that = this
+      // 判断用户是否已经选择要进行数据库数据爬取的课程
+      if (that.value === '') {
+        this.$message({
+          showClose: true,
+          message: '请先选择要进行数据库数据爬取的课程！',
+          type: 'warning'
+        })
+        that.analysisResults = ''
+        that.visible = false
+        return
+      }
+      that.$message({
+        showClose: true,
+        message: '数据库数据爬取开始！请稍等！',
+        type: 'success'
+      })
+      axios.post('http://127.0.0.1:8000/v1/spiderToDb', {
+          text: that.value
+        }).then((response) => {
+        that.$message({
+          showClose: true,
+          message: '数据库数据爬取完成！',
+          type: 'success'
+        })
+      }).catch((error) => {
+        console.log(error)
         that.$message({
           showClose: true,
           message: '请求异常，请检查后端服务模块！',
