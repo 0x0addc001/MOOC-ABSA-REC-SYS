@@ -8,15 +8,15 @@ from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from collections import defaultdict
-from backend.predict.utils import format_print,load_json_file
-from backend.predict.main import singlePredict,batchPredict,dbPredict
+from backend.unified_sentiment_extraction.utils import *
+from backend.unified_sentiment_extraction.predict import *
 from spider.main import spider_to_db
 
 def main():
     schema = [{"评价维度": ["观点词", "情感倾向[正向,负向,未提及]"]}]
 
     # 模型预热，方面级情感分析
-    input_text = "环境装修不错，也很干净，前台服务非常好"
+    input_text = "老师课讲的很好，生动形象，条理清晰，细节满满！ 如果能在之后的讲课中多结合一下现有的技术进行讲课，那就更好了。讲课敷衍，内容肤浅，课件简陋，就是念PPT。"
     result_text = singlePredict(input_text, schema)
     format_print(result_text)
 
@@ -141,14 +141,14 @@ def main():
         try:
             # 将添加时间标记重命名避免重复
             now_time = int(time.mktime(time.localtime(time.time())))
-            filePath = "./textresource/" + str(now_time) + "_" + fileName
+            filePath = "./text_resource/" + str(now_time) + "_" + fileName
             # 将用户上传的文件保存到本地
             fout = open(filePath, 'wb')
             fout.write(fileBytes)
             fout.close()
             # 批量文本情感分析
             batchAnalysisResults = batchPredict(filePath, schema)
-            sr = SentimentResult('./outputs/sentiment_results.json')
+            sr = SentimentResult('unified_sentiment_extraction/outputs/sentiment_results.json')
             # 方面频率词云图数据
             aspect_wc_data = []
             for item in sr.aspect_frequency:
@@ -239,7 +239,8 @@ def main():
             course_key = document.text
             # 数据库评论情感分析
             dbAnalysisResults = dbPredict(course_key, schema)
-            sr = SentimentResult('./outputs/sentiment_results.json')
+
+            sr = SentimentResult('unified_sentiment_extraction/outputs/sentiment_results.json')
             # 方面频率词云图数据
             aspect_wc_data = []
             for item in sr.aspect_frequency:
@@ -314,7 +315,8 @@ def main():
                        "aspect_sentiment_wc_data": aspect_sentiment_wc_data,
                        "aspect_sentiment_hist_x_data": aspect_sentiment_hist_x_data,
                        "aspect_sentiment_positives": aspect_sentiment_positives,
-                       "aspect_sentiment_negatives": aspect_sentiment_negatives}
+                       "aspect_sentiment_negatives": aspect_sentiment_negatives
+                       }
             return results
         # 异常处理
         except Exception as e:

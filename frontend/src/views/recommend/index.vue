@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-card class="box-card">
       <div class="tip" style="text-align: center;">
-        请选择您感兴趣的课程:
-        <el-select v-model="course_value" placeholder="请选择课程">
+        您感兴趣的课程:
+        <el-select v-model="course_value" placeholder="请选择课程" style="padding-top:10px; padding-bottom:10px;">
         <el-option
           v-for="item in course_options"
           :key="item.value"
@@ -11,10 +11,21 @@
           :value="item.value">
         </el-option>
         </el-select>
-        &nbsp;&nbsp;&nbsp;请选择您关注的方面:
-        <el-select v-model="class_value" placeholder="请选择方面">
+        <br/>
+        您最关注的方面:
+        <el-select v-model="concern_category_value" placeholder="请选择您关注的方面" style="padding-top:10px; padding-bottom:10px;">
         <el-option
-          v-for="item in class_options"
+          v-for="item in concern_category_options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+        </el-select>
+        <br/>
+        您最适合的难度:
+        <el-select v-model="difficulty_coefficient_value" placeholder="请选择您适合的难度" style="padding-top:10px; padding-bottom:10px;">
+        <el-option
+          v-for="item in difficulty_coefficient_options"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -79,27 +90,48 @@ export default {
           label: '计算机网络'
         }],
         course_value: '',
-        class_options: [{
-          value: '老师',
-          label: '老师'
+        concern_category_options: [{
+          value: '系统全面',
+          label: '系统全面'
         }, {
-          value: '设计',
-          label: '设计'
+          value: '耐心细致',
+          label: '耐心细致'
         }, {
-          value: '内容',
-          label: '内容'
+          value: '条理清晰',
+          label: '条理清晰'
         }, {
-          value: '清晰',
-          label: '清晰'
+          value: '风趣幽默',
+          label: '风趣幽默'
+        }, {
+          value: '设计巧妙',
+          label: '设计巧妙'
+        }, {
+          value: '视频质量',
+          label: '视频质量'
+        }, {
+          value: '课件质量',
+          label: '课件质量'
         }],
-        class_value: ''
+        concern_category_value: '',
+        difficulty_coefficient_options: [{
+          value: '较难',
+          label: '较难'
+        }, {
+          value: '适中',
+          label: '适中'
+        }, {
+          value: '偏易',
+          label: '偏易'
+        }],
+        difficulty_coefficient_value: ''
     }
   },
   methods: {
     clear() {
       var that = this
       that.course_value = ''
-      that.class_value = ''
+      that.concern_category_value = ''
+      that.difficulty_coefficient_value = ''
       that.analysisResult = ''
       that.visible = false
       that.$message({
