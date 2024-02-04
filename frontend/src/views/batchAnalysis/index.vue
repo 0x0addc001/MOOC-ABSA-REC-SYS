@@ -37,7 +37,10 @@
         <el-table-column
           prop="aspect"
           label="方面"
-          width="180"
+        />
+        <el-table-column
+          prop="category"
+          label="类别"
         />
         <el-table-column
           prop="opinions"
@@ -45,8 +48,7 @@
         />
         <el-table-column
           prop="sentiment"
-          label="情感倾向"
-          width="180"
+          label="情感"
         />
       </el-table>
       <el-row style="text-align: center; padding-top:20px;padding-bottom:20px;">

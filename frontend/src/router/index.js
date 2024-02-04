@@ -68,12 +68,12 @@ export const constantRoutes = [
         component: () => import('@/views/singleAnalysis/index'),
         meta: { title: '单条评论分析', icon: 'el-icon-chat-line-square' }
       },
-      // {
-      //   path: 'batchAnalysis',
-      //   name: 'batchAnalysis',
-      //   component: () => import('@/views/batchAnalysis/index'),
-      //   meta: { title: '批量评论分析', icon: 'el-icon-document' }
-      // },
+      {
+        path: 'batchAnalysis',
+        name: 'batchAnalysis',
+        component: () => import('@/views/batchAnalysis/index'),
+        meta: { title: '批量评论分析', icon: 'el-icon-document' }
+      },
       {
         path: 'dbAnalysis',
         name: 'dbAnalysis',

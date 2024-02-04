@@ -6,7 +6,7 @@
 """
 import os
 from paddlenlp import Taskflow
-from backend.predict.utils import write_json_file,format_results,format_print,load_txt,load_db,save_results_to_db
+from backend.unified_sentiment_extraction.utils import *
 import MySQLdb
 
 # 单条文本情感分析预测函数
@@ -16,7 +16,7 @@ def singlePredict(input_text, schema):
     """
     # 单条文本情感分析
     senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema)
-    # predict with Taskflow
+    # unified_sentiment_extraction with Taskflow
     results = senta(input_text)
     # 如果语句中没有方面词，只有情感词，则调用语句级情感分析
     if results==[{}]:
@@ -24,10 +24,10 @@ def singlePredict(input_text, schema):
         senta2 = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema2)
         results = senta2(input_text)
         sentiment = results[0]['情感倾向[正向，负向]'][0]['text']
-        results = [{"aspect": 'None', "opinions": input_text, "sentiment": sentiment}]
+        results = [{"aspect": 'None', "category": 'None', "opinions": input_text, "sentiment": sentiment}]
     else:
-        # 将结果输出，并以list形式保存到consequence中
-        results = format_results(results)
+        # 将结果处理为acos_list形式
+        results = format_to_acos_list(results)
     # 返回预测结果
     return results
 
@@ -44,14 +44,14 @@ def batchPredict(file_path,schema):
     # 批量情感分析
     senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
                       batch_size=4, max_seq_len=512)
-    # predict with Taskflow
+    # unified_sentiment_extraction with Taskflow
     results = senta(examples)
-    # 保存结果
-    save_path = os.path.join('./outputs', "sentiment_results.json")
+    # 保存结果到json
+    save_path = os.path.join('./unified_sentiment_extraction/outputs', "sentiment_results.json")
     write_json_file(results, save_path)
     print("The results of sentiment analysis has been saved to: {}".format(save_path))
-    # 将结果输出并以list形式保存到consequence中
-    results = format_results(results)
+    # 将结果处理为acos_list形式
+    results = format_to_acos_list(results)
     # 返回预测结果
     return results
 
@@ -77,18 +77,21 @@ def dbPredict(course_key,schema):
         # 批量情感分析
         senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
                          batch_size=4, max_seq_len=512)
-        # predict with Taskflow
+        # unified_sentiment_extraction with Taskflow
         results = senta(examples)
 
         # 去除空值
         results = [i for i in results if bool(i)]
 
-        # 保存结果
-        save_path = os.path.join('./outputs', "sentiment_results.json")
+        # 保存结果到json
+        save_path = os.path.join('./unified_sentiment_extraction/outputs', "sentiment_results.json")
         write_json_file(results, save_path)
         print("The results of sentiment analysis has been saved to: {}".format(save_path))
-        # 将结果输出并以list形式保存到consequence中
-        results = format_results(results)
+
+        # 将结果处理为acos_list形式
+        results = format_to_acos_list(results)
+
+        # 保存结果到db
         save_results_to_db(results, conn, cursor)
 
         # 返回预测结果
@@ -105,16 +108,12 @@ if __name__== "__main__" :
     schema =  [{"评价维度":["观点词", "情感倾向[正向,负向,未提及]"]}]
 
     # 单条文本情感分析
-    input_text_1 = "环境装修不错，也很干净，前台服务非常好"
+    input_text_1 = "老师课讲的很好，生动形象，条理清晰，细节满满！ 如果能在之后的讲课中多结合一下现有的技术进行讲课，那就更好了。讲课敷衍，内容肤浅，课件简陋，就是念PPT。"
     result_text_1 = singlePredict(input_text_1, schema)
     format_print(result_text_1)
 
-    input_text_2 = "蛋糕味道不错，很好吃，店家很耐心，服务也很好，很棒"
-    result_text_2 = singlePredict(input_text_2, schema)
-    format_print(result_text_2)
-
     # 读取txt文件内容进行批量情感分析
-    file_path = './textresource/test_hotel_small.txt'
+    file_path = './unified_sentiment_extraction/text_resource/batch_test.txt'
     # 批量文本情感分析
     result_batch = batchPredict(file_path,schema)
     format_print(result_batch)

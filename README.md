@@ -87,11 +87,6 @@ pip install openpyxl
 ```
 
 启动后端项目：
-通过cd命令进行项目backend文件夹，运行demo演示程序进行测试
-```bash
-python backend/main.py
-```
-
 通过cd命令进行项目backend文件夹，启动后端接口服务！
 ```bash
 python backend/main.py
