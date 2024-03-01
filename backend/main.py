@@ -8,9 +8,10 @@ from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from collections import defaultdict
-from backend.unified_sentiment_extraction.utils import *
 from backend.unified_sentiment_extraction.predict import *
+from backend.recommend.predict import *
 from spider.main import spider_to_db
+
 
 def main():
     schema = [{"评价维度": ["观点词", "情感倾向[正向,负向,未提及]"]}]
@@ -107,7 +108,9 @@ def main():
 
     # 定义请求体数据类型：text  用户输入的要进行方面级情感分析的文本
     class Document(BaseModel):
-        text: str
+        course_key: str
+        concern_category: str
+        difficulty_coefficient: str
 
     # 定义路径操作装饰器：POST方法 + API接口路径
     # 单文本情感分析接口
@@ -120,7 +123,11 @@ def main():
             # 调用加载好的模型进行方面级情感分析
             singleAnalysisResult = singlePredict(input_text, schema)
             # 接口结果返回
-            results = {"message": "success", "inputText": document.text, "singleAnalysisResult": singleAnalysisResult}
+            results = {
+                "message": "success",
+                "inputText": document.text,
+                "singleAnalysisResult": singleAnalysisResult
+            }
             return results
         # 异常处理
         except Exception as e:
@@ -213,17 +220,20 @@ def main():
                     aspect_sentiment_negatives.append(0)
 
             # 接口结果返回
-            results = {"message": "success", "batchAnalysisResults": batchAnalysisResults,
-                       "aspect_wc_data": aspect_wc_data,
-                       "aspect_hist_x_data": aspect_hist_x_data,
-                       "aspect_hist_y_data": aspect_hist_y_data,
-                       "aspect_opinion_wc_data": aspect_opinion_wc_data,
-                       "aspect_opinion_hist_x_data": aspect_opinion_hist_x_data,
-                       "aspect_opinion_hist_y_data": aspect_opinion_hist_y_data,
-                       "aspect_sentiment_wc_data": aspect_sentiment_wc_data,
-                       "aspect_sentiment_hist_x_data": aspect_sentiment_hist_x_data,
-                       "aspect_sentiment_positives": aspect_sentiment_positives,
-                       "aspect_sentiment_negatives": aspect_sentiment_negatives}
+            results = {
+                "message": "success",
+                "batchAnalysisResults": batchAnalysisResults,
+                "aspect_wc_data": aspect_wc_data,
+                "aspect_hist_x_data": aspect_hist_x_data,
+                "aspect_hist_y_data": aspect_hist_y_data,
+                "aspect_opinion_wc_data": aspect_opinion_wc_data,
+                "aspect_opinion_hist_x_data": aspect_opinion_hist_x_data,
+                "aspect_opinion_hist_y_data": aspect_opinion_hist_y_data,
+                "aspect_sentiment_wc_data": aspect_sentiment_wc_data,
+                "aspect_sentiment_hist_x_data": aspect_sentiment_hist_x_data,
+                "aspect_sentiment_positives": aspect_sentiment_positives,
+                "aspect_sentiment_negatives": aspect_sentiment_negatives
+            }
             return results
         # 异常处理
         except Exception as e:
@@ -236,7 +246,7 @@ def main():
     async def dbEmotionAnalysis(document: Document):
         try:
             # 获取用户选择的课程关键词
-            course_key = document.text
+            course_key = document.course_key
             # 数据库评论情感分析
             dbAnalysisResults = dbPredict(course_key, schema)
 
@@ -305,18 +315,43 @@ def main():
                     aspect_sentiment_negatives.append(0)
 
             # 接口结果返回
-            results = {"message": "success", "dbAnalysisResults": dbAnalysisResults,
-                       "aspect_wc_data": aspect_wc_data,
-                       "aspect_hist_x_data": aspect_hist_x_data,
-                       "aspect_hist_y_data": aspect_hist_y_data,
-                       "aspect_opinion_wc_data": aspect_opinion_wc_data,
-                       "aspect_opinion_hist_x_data": aspect_opinion_hist_x_data,
-                       "aspect_opinion_hist_y_data": aspect_opinion_hist_y_data,
-                       "aspect_sentiment_wc_data": aspect_sentiment_wc_data,
-                       "aspect_sentiment_hist_x_data": aspect_sentiment_hist_x_data,
-                       "aspect_sentiment_positives": aspect_sentiment_positives,
-                       "aspect_sentiment_negatives": aspect_sentiment_negatives
-                       }
+            results = {
+                "message": "success",
+                "dbAnalysisResults": dbAnalysisResults,
+                "aspect_wc_data": aspect_wc_data,
+                "aspect_hist_x_data": aspect_hist_x_data,
+                "aspect_hist_y_data": aspect_hist_y_data,
+                "aspect_opinion_wc_data": aspect_opinion_wc_data,
+                "aspect_opinion_hist_x_data": aspect_opinion_hist_x_data,
+                "aspect_opinion_hist_y_data": aspect_opinion_hist_y_data,
+                "aspect_sentiment_wc_data": aspect_sentiment_wc_data,
+                "aspect_sentiment_hist_x_data": aspect_sentiment_hist_x_data,
+                "aspect_sentiment_positives": aspect_sentiment_positives,
+                "aspect_sentiment_negatives": aspect_sentiment_negatives
+            }
+            return results
+        # 异常处理
+        except Exception as e:
+            print("异常信息：", e)
+            raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
+
+    # 数据库推荐接口
+    @app.post("/v1/dbRecommend/", status_code=200)
+    # 定义路径操作函数，当接口被访问将调用该函数
+    async def dbRecommend(document: Document):
+        try:
+            # 获取用户选择的选项
+            course_key = document.course_key
+            concern_category = document.concern_category
+            difficulty_coefficient = document.difficulty_coefficient
+            # 数据库评论情感分析
+            dbRecommendResults = dbRecomm(course_key, concern_category, difficulty_coefficient)
+
+            # 接口结果返回
+            results = {
+                "message": "success",
+                "dbRecommendResults": dbRecommendResults,
+            }
             return results
         # 异常处理
         except Exception as e:
@@ -327,19 +362,19 @@ def main():
     @app.post("/v1/spiderToDb/", status_code=200)
     # 定义路径操作函数，当接口被访问将调用该函数
     async def spiderToDb(document: Document):
-         try:
-             # 获取用户选择的课程关键词
-             course_key = document.text
-             # 数据库数据爬取
-             spider_to_db(course_key)
-             return {"message": "success"}
-         except Exception as e:
-             print("异常信息：", e)
-             raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
-
+        try:
+            # 获取用户选择的课程关键词
+            course_key = document.text
+            # 数据库数据爬取
+            spider_to_db(course_key)
+            return {"message": "success"}
+        except Exception as e:
+            print("异常信息：", e)
+            raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
 
     # 启动创建的实例app，设置启动ip和端口号
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
 
 if __name__ == "__main__":
     main()
