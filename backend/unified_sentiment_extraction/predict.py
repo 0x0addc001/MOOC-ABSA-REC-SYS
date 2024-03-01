@@ -72,16 +72,21 @@ def dbPredict(course_key,schema):
         )
         cursor = conn.cursor()
 
-        examples = load_db(course_key, cursor)
+        texts,raw_ids = load_db(course_key, cursor)
 
         # 批量情感分析
         senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,
                          batch_size=4, max_seq_len=512)
         # unified_sentiment_extraction with Taskflow
-        results = senta(examples)
+        senta_results = senta(texts)
 
-        # 去除空值
-        results = [i for i in results if bool(i)]
+        raw_id_index = 0
+        results = []
+        for i in senta_results:
+            if bool(i): # 去除空值，添加raw_id 原： results = [i for i in results if bool(i)]
+                i["raw_id"] = raw_ids[raw_id_index]
+                results.append(i)
+            raw_id_index += 1
 
         # 保存结果到json
         save_path = os.path.join('./unified_sentiment_extraction/outputs', "sentiment_results.json")
