@@ -3,6 +3,7 @@
     使用Taskflow进行方面级情感分析
     单文本情感分析：针对输入的语句进行单文本情感分析
     批量文本情感分析：读取txt文件内容后进行批量情感分析
+    数据库情感分析：读取数据库记录后进行批量情感分析
 """
 import os
 from paddlenlp import Taskflow
