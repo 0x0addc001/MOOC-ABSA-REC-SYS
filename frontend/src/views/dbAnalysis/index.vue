@@ -4,7 +4,7 @@
     <el-card class="box-card">
       <div class="tip" style="text-align: center;">
         请选择要进行数据爬取或情感分析的课程:
-        <el-select v-model="value" placeholder="请选择课程">
+        <el-select v-model="course_key" placeholder="请选择课程">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -118,14 +118,14 @@ export default {
           value: '计算机网络',
           label: '计算机网络'
         }],
-        value: ''
+        course_key: ''
     }
   },
   methods: {
     clear() {
       var that = this
       that.value = ''
-      that.analysisResult = ''
+      that.analysisResults = ''
       that.visible = false
       that.$message({
         showClose: true,
@@ -155,7 +155,7 @@ export default {
     dbEmotionAnalysis() {
       var that = this
       // 判断用户是否已经选择要进行数据库情感分析的课程
-      if (that.value === '') {
+      if (that.course_key === '') {
         this.$message({
           showClose: true,
           message: '请先选择要进行数据库情感分析的课程！',
@@ -172,8 +172,8 @@ export default {
         type: 'success'
       })
       axios.post('http://127.0.0.1:8000/v1/dbEmotionAnalysis', {
-          text: that.value
-        }).then((response) => {
+        course_key: that.course_key
+      }).then((response) => {
         // 获取接口返回的情感分析预测结果并更新界面数据
         that.analysisResults = response.data.dbAnalysisResults
         that.aspect_wc_data = response.data.aspect_wc_data
@@ -207,7 +207,7 @@ export default {
     spiderToDb() {
       var that = this
       // 判断用户是否已经选择要进行数据库数据爬取的课程
-      if (that.value === '') {
+      if (that.course_key === '') {
         this.$message({
           showClose: true,
           message: '请先选择要进行数据库数据爬取的课程！',
@@ -223,7 +223,7 @@ export default {
         type: 'success'
       })
       axios.post('http://127.0.0.1:8000/v1/spiderToDb', {
-          text: that.value
+          text: that.course_key
         }).then((response) => {
         that.$message({
           showClose: true,
