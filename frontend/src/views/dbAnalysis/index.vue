@@ -20,6 +20,24 @@
         <el-button type="primary" round @click="dbEmotionAnalysis()">情感分析</el-button>
         <!-- <el-button type="success" round @click="saveResult()">保存结果</el-button> -->
     </el-row>
+
+    <el-card v-show="sp_visible" class="box-card">
+      <div v-show="sp_visible" class="tip">
+        数据爬取结果（评论部分）：
+      </div>
+      <el-table
+        :data="spiderResults"
+        height="290"
+        border
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="comment"
+          label="评论"
+        />
+      </el-table>
+    </el-card>
+
     <el-card v-show="visible" class="box-card">
       <div v-show="visible" class="tip">
         数据库情感分析结果：
@@ -88,6 +106,7 @@ export default {
   data() {
     return {
       analysisResults: '',
+      spiderResults: '',
       aspect_wc_data: '',
       aspect_hist_x_data: '',
       aspect_hist_y_data: '',
@@ -99,6 +118,7 @@ export default {
       aspect_sentiment_positives: '',
       aspect_sentiment_negatives: '',
       visible: false,
+      sp_visible: false,
       aw_visible: false,
       ah_visible: false,
       aow_visible: false,
@@ -124,9 +144,11 @@ export default {
   methods: {
     clear() {
       var that = this
-      that.value = ''
+      that.course_key = ''
       that.analysisResults = ''
+      that.spiderResults = ''
       that.visible = false
+      that.sp_visible = false
       that.$message({
         showClose: true,
         message: '选择内容已清空！',
@@ -213,18 +235,21 @@ export default {
           message: '请先选择要进行数据库数据爬取的课程！',
           type: 'warning'
         })
-        that.analysisResults = ''
-        that.visible = false
+        that.spiderResults = ''
+        that.sp_visible = false
         return
       }
+      that.sp_visible = true
       that.$message({
         showClose: true,
         message: '数据库数据爬取开始！请稍等！',
         type: 'success'
       })
       axios.post('http://127.0.0.1:8000/v1/spiderToDb', {
-          text: that.course_key
-        }).then((response) => {
+        course_key: that.course_key
+      }).then((response) => {
+        // 获取接口返回的情感分析预测结果并更新界面数据
+        that.spiderResults = response.data.spiderResults
         that.$message({
           showClose: true,
           message: '数据库数据爬取完成！',
@@ -232,6 +257,8 @@ export default {
         })
       }).catch((error) => {
         console.log(error)
+        that.spiderResults = ''
+        that.visible = false
         that.$message({
           showClose: true,
           message: '请求异常，请检查后端服务模块！',
