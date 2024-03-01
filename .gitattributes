@@ -2,4 +2,3 @@
 * text=auto
 *.pdparams filter=lfs diff=lfs merge=lfs -text
 *.pdiparams filter=lfs diff=lfs merge=lfs -text
-*.pdpparams filter=lfs diff=lfs merge=lfs -text
