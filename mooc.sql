@@ -11,7 +11,7 @@
  Target Server Version : 50738
  File Encoding         : 65001
 
- Date: 04/02/2024 15:04:33
+ Date: 01/03/2024 16:40:17
 */
 
 SET NAMES utf8mb4;
@@ -30,30 +30,32 @@ CREATE TABLE `absa_comments`  (
   `sentiment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `raw_id`(`raw_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 95 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 117 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of absa_comments
 -- ----------------------------
-INSERT INTO `absa_comments` VALUES (76, 1, '系统', '视频质量', '[\'佳\']', '正向');
-INSERT INTO `absa_comments` VALUES (77, 1, '讲解', '课件质量', '[\'详细\']', '正向');
-INSERT INTO `absa_comments` VALUES (78, 1, '内容', '课件质量', '[\'丰富\']', '正向');
-INSERT INTO `absa_comments` VALUES (79, 1, '质量', '视频质量', '[\'高\']', '正向');
-INSERT INTO `absa_comments` VALUES (80, 1, '课程', '课件质量', '[\'挺好\']', '正向');
-INSERT INTO `absa_comments` VALUES (81, 1, '老师', '课件质量', '[\'不错\']', '正向');
-INSERT INTO `absa_comments` VALUES (82, 1, '内容', '课件质量', '[\'细且\']', '正向');
-INSERT INTO `absa_comments` VALUES (83, 1, '总体', '课件质量', '[\'不错\']', '正向');
-INSERT INTO `absa_comments` VALUES (84, 1, '老师', '课件质量', '[\'认真\']', '正向');
-INSERT INTO `absa_comments` VALUES (85, 1, '老师', '课件质量', '[\'认真\']', '正向');
-INSERT INTO `absa_comments` VALUES (86, 1, '课本', '课件质量', '[\'配套\']', '正向');
-INSERT INTO `absa_comments` VALUES (87, 1, '老师', '课件质量', '[\'好\']', '正向');
-INSERT INTO `absa_comments` VALUES (88, 1, '课程', '课件质量', '[\'好\']', '正向');
-INSERT INTO `absa_comments` VALUES (89, 1, '老师', '课件质量', '[\'厉害\']', '正向');
-INSERT INTO `absa_comments` VALUES (90, 1, '感觉', '设计巧妙', '[\'不适合\']', '负向');
-INSERT INTO `absa_comments` VALUES (91, 1, '老师', '课件质量', '[\'棒\']', '正向');
-INSERT INTO `absa_comments` VALUES (92, 1, 'mooc', '视频质量', '[\'方便\']', '正向');
-INSERT INTO `absa_comments` VALUES (93, 1, '例子', '课件质量', '[\'棒\']', '正向');
-INSERT INTO `absa_comments` VALUES (94, 1, '思路', '设计巧妙', '[\'清晰\']', '正向');
+INSERT INTO `absa_comments` VALUES (96, 143, '系统', '视频质量', '[\'佳\']', '正向');
+INSERT INTO `absa_comments` VALUES (97, 143, '老师', '课件质量', '[\'棒\']', '正向');
+INSERT INTO `absa_comments` VALUES (98, 145, '系统', '视频质量', '[\'佳\']', '正向');
+INSERT INTO `absa_comments` VALUES (99, 145, '讲解', '课件质量', '[\'详细\']', '正向');
+INSERT INTO `absa_comments` VALUES (100, 146, '内容', '课件质量', '[\'丰富\']', '正向');
+INSERT INTO `absa_comments` VALUES (101, 147, '质量', '视频质量', '[\'高\']', '正向');
+INSERT INTO `absa_comments` VALUES (102, 148, '课程', '课件质量', '[\'挺好\']', '正向');
+INSERT INTO `absa_comments` VALUES (103, 151, '老师', '课件质量', '[\'不错\']', '正向');
+INSERT INTO `absa_comments` VALUES (104, 151, '内容', '课件质量', '[\'细且\']', '正向');
+INSERT INTO `absa_comments` VALUES (105, 152, '总体', '课件质量', '[\'不错\']', '正向');
+INSERT INTO `absa_comments` VALUES (106, 152, '老师', '课件质量', '[\'认真\']', '正向');
+INSERT INTO `absa_comments` VALUES (107, 153, '老师', '课件质量', '[\'认真\']', '正向');
+INSERT INTO `absa_comments` VALUES (108, 153, '课本', '课件质量', '[\'配套\']', '正向');
+INSERT INTO `absa_comments` VALUES (109, 154, '老师', '课件质量', '[\'好\']', '正向');
+INSERT INTO `absa_comments` VALUES (110, 155, '课程', '课件质量', '[\'好\']', '正向');
+INSERT INTO `absa_comments` VALUES (111, 155, '老师', '课件质量', '[\'厉害\']', '正向');
+INSERT INTO `absa_comments` VALUES (112, 156, '感觉', '设计巧妙', '[\'不适合\']', '负向');
+INSERT INTO `absa_comments` VALUES (113, 157, '老师', '课件质量', '[\'棒\']', '正向');
+INSERT INTO `absa_comments` VALUES (114, 159, 'mooc', '视频质量', '[\'方便\']', '正向');
+INSERT INTO `absa_comments` VALUES (115, 160, '例子', '课件质量', '[\'棒\']', '正向');
+INSERT INTO `absa_comments` VALUES (116, 161, '思路', '设计巧妙', '[\'清晰\']', '正向');
 
 -- ----------------------------
 -- Table structure for concern_categories
@@ -77,20 +79,45 @@ INSERT INTO `concern_categories` VALUES (6, '视频质量');
 INSERT INTO `concern_categories` VALUES (7, '课件质量');
 
 -- ----------------------------
+-- Table structure for course_entities
+-- ----------------------------
+DROP TABLE IF EXISTS `course_entities`;
+CREATE TABLE `course_entities`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_key_id` int(11) DEFAULT NULL,
+  `course_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `university_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `teacher_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_key_id`(`course_key_id`) USING BTREE,
+  CONSTRAINT `course_key_id` FOREIGN KEY (`course_key_id`) REFERENCES `course_keys` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of course_entities
+-- ----------------------------
+INSERT INTO `course_entities` VALUES (1, 2, '操作系统', '北京交通大学', ' 翟高寿 、 何永忠 、 黄华 、 杨武杰 、 董兴业', 'https://www.icourse163.org/course/NJTU-1003245001?from=searchPage&outVendor=zw_mooc_pcssjg_');
+INSERT INTO `course_entities` VALUES (2, 2, '操作系统A', '南京邮电大学', ' 徐小龙 、 叶宁 、 段卫华 、 胡惠娟 、 吴晓诗 、 窦轶 、 王波', 'https://www.icourse163.org/course/NJUPT-1003219004?from=searchPage&outVendor=zw_mooc_pcssjg_');
+INSERT INTO `course_entities` VALUES (3, 2, '认证学习\r\n操作系统原理', '华中科技大学', ' 苏曙光 、 邹德清 、 肖来元 、 吴涛 、 李珍', 'https://www.icourse163.org/course/HUST-1003405007?from=searchPage&outVendor=zw_mooc_pcssjg_');
+
+-- ----------------------------
 -- Table structure for course_keys
 -- ----------------------------
 DROP TABLE IF EXISTS `course_keys`;
 CREATE TABLE `course_keys`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `course_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `course_key`(`course_key`) USING BTREE,
+  INDEX `course_key_2`(`course_key`, `id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of course_keys
 -- ----------------------------
-INSERT INTO `course_keys` VALUES (1, '数据结构');
 INSERT INTO `course_keys` VALUES (2, '操作系统');
+INSERT INTO `course_keys` VALUES (1, '数据结构');
 INSERT INTO `course_keys` VALUES (3, '计算机组成原理');
 INSERT INTO `course_keys` VALUES (4, '计算机网络');
 
@@ -138,5 +165,11 @@ INSERT INTO `raw_comments` VALUES (158, '操作系统', '操作系统', '北京�
 INSERT INTO `raw_comments` VALUES (159, '操作系统', '操作系统', '北京交通大学', '翟高寿 副教授 何永忠 教授 黄华 副教授', 'https://www.icourse163.org/course/NJTU-1003245001?from=searchPage&outVendor=zw_mooc_pcssjg_', '1028652747', 'BJTUHH17281269', 'mooc还是很方便，可以随时看，随时停，自主调节进度。', '发表于 2020-06-11', '第2次开课', '1', '5.0');
 INSERT INTO `raw_comments` VALUES (160, '操作系统', '操作系统', '北京交通大学', '翟高寿 副教授 何永忠 教授 黄华 副教授', 'https://www.icourse163.org/course/NJTU-1003245001?from=searchPage&outVendor=zw_mooc_pcssjg_', '1029805111', '斌_计算机视觉', '讲的非常好，虽然一次不能全部消化，多听几次就行了。举得例子非常棒！', '发表于 2020-05-24', '第2次开课', '1', '5.0');
 INSERT INTO `raw_comments` VALUES (161, '操作系统', '操作系统', '北京交通大学', '翟高寿 副教授 何永忠 教授 黄华 副教授', 'https://www.icourse163.org/course/NJTU-1003245001?from=searchPage&outVendor=zw_mooc_pcssjg_', '1020228123', '师爷ykt1474516570118', '生动，清晰，详细，思路也很清晰，比只读ppt的好太多', '发表于 2019-06-26', '第1次开课', '1', '5.0');
+
+-- ----------------------------
+-- View structure for course_key_entity
+-- ----------------------------
+DROP VIEW IF EXISTS `course_key_entity`;
+CREATE ALGORITHM = UNDEFINED DEFINER = `root`@`localhost` SQL SECURITY DEFINER VIEW `course_key_entity` AS select `course_keys`.`course_key` AS `course_key`,`course_entities`.`course_name` AS `course_name`,`course_entities`.`university_name` AS `university_name`,`course_entities`.`teacher_name` AS `teacher_name`,`course_entities`.`url` AS `url` from (`course_keys` join `course_entities` on((`course_entities`.`course_key_id` = `course_keys`.`id`)));
 
 SET FOREIGN_KEY_CHECKS = 1;
