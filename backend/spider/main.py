@@ -25,6 +25,8 @@ def spider_to_db(course_key):
         driver = webdriver.Chrome(options=options)
         driver.maximize_window()
 
+        comments_list = []
+
         course_url = 'https://www.icourse163.org/search.htm?search=' + course_key + '#/'
         university_link_list = get_courses_url(course_url, driver)
         for university_link in university_link_list:
@@ -53,6 +55,7 @@ def spider_to_db(course_key):
         driver.quit()
         cursor.close()
         conn.close()
+        return comments_list
 
 if __name__ == "__main__":
     spider_to_db("数据结构")

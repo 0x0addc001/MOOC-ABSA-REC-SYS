@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from collections import defaultdict
 from backend.unified_sentiment_extraction.predict import *
-from backend.recommend.predict import *
+from backend.recommend.main import *
 from spider.main import spider_to_db
 
 
@@ -108,9 +108,10 @@ def main():
 
     # 定义请求体数据类型：text  用户输入的要进行方面级情感分析的文本
     class Document(BaseModel):
-        course_key: str
-        concern_category: str
-        difficulty_coefficient: str
+        text: str = ""
+        course_key: str = ""
+        concern_category: str = ""
+        difficulty_coefficient: str = ""
 
     # 定义路径操作装饰器：POST方法 + API接口路径
     # 单文本情感分析接口
@@ -364,10 +365,15 @@ def main():
     async def spiderToDb(document: Document):
         try:
             # 获取用户选择的课程关键词
-            course_key = document.text
+            course_key = document.course_key
             # 数据库数据爬取
-            spider_to_db(course_key)
-            return {"message": "success"}
+            comments_list = spider_to_db(course_key)
+            spiderResults = [{"comment": comment} for comment in comments_list]
+            print(spiderResults)
+            return {
+                "message": "success",
+                "spiderResults": spiderResults
+            }
         except Exception as e:
             print("异常信息：", e)
             raise HTTPException(status_code=500, detail=str("请求失败，服务器端发生异常！异常信息提示：" + str(e)))
