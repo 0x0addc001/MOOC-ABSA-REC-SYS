@@ -21,6 +21,15 @@ def spider_to_db(course_key):
         )
 
         cursor = conn.cursor()
+
+        select_sql = """
+                        select id 
+                        from mooc.course_keys
+                        where course_key = %s
+                     """
+        cursor.execute(select_sql, (course_key,))
+        course_key_id = cursor.fetchall()
+
         options = Options()
         driver = webdriver.Chrome(options=options)
         driver.maximize_window()
@@ -37,12 +46,12 @@ def spider_to_db(course_key):
                 course_name, teacher_name, url, userid_list, names_list, comments_list, created_time_list, course_time_list, voteup_list, \
                 rating_list = parser_comments(url, driver)
 
-                saver(course_key, course_name, university_name, teacher_name, url, userid_list, names_list,
+                saver(course_key_id, course_name, university_name, teacher_name, url, userid_list, names_list,
                       comments_list,
                       created_time_list, course_time_list, voteup_list, rating_list,
                       conn, cursor)
 
-                break  # todo 测试阶段：只爬一门课程
+                # break
 
             except Exception:
                 print("Error: ", university_link)

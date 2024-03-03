@@ -1,5 +1,3 @@
-import os
-from paddlenlp import Taskflow
 from backend.recommend.utils import *
 import MySQLdb
 
@@ -20,10 +18,11 @@ def dbRecomm(course_key, concern_category, difficulty_coefficient):
         )
         cursor = conn.cursor()
 
-        results = load_db(course_key, cursor)
+        comment_dataset = load_comment_dataset(course_key, concern_category, cursor)
+        courses_scores = calculate_all_courses_scores(comment_dataset)
+        course_results = load_courses(courses_scores, cursor)
 
-        # 返回预测结果
-        return results
+        return course_results
     except Exception as e:
         print("异常信息：", e)
         conn.rollback()

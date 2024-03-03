@@ -127,6 +127,7 @@ ps:看到App running at:Local: http://localhost:9528代表项目启动成功。�
 
   ![pic2](./pic/pic3.1.1.png)
   ![pic2](./pic/pic3.1.2.png)
+  ![pic2](./pic/pic3.1.3.png)
 
 2.2. 数据库评论方面级情感分析：在数据库评论分析界面选择课程名称，点击情感分析按钮进行情感分析预测。
 

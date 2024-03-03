@@ -44,10 +44,18 @@
       <!-- <el-input v-show="visible" v-model="result" type="textarea" :rows="13" /> -->
       <el-table
         :data="recommendResults"
-        height="290"
+        height="500"
         border
         style="width: 100%"
       >
+        <el-table-column
+          prop="course_rank"
+          label="排名"
+        />
+        <el-table-column
+          prop="course_score"
+          label="评分"
+        />
         <el-table-column
           prop="course_name"
           label="课程"

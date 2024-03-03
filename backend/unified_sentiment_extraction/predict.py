@@ -73,7 +73,7 @@ def dbPredict(course_key,schema):
         )
         cursor = conn.cursor()
 
-        texts,raw_ids = load_db(course_key, cursor)
+        texts, raw_ids = load_db(course_key, cursor)
 
         # 批量情感分析
         senta = Taskflow("sentiment_analysis", model="uie-senta-nano", schema=schema,

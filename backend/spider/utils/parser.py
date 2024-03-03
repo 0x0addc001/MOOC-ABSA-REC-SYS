@@ -64,7 +64,7 @@ def parser_comments(url, driver):
     '''
     @description: get the course comments info from the course page
     @param {"url":course_url,"driver":chrome driver}
-    @return:  course_name, teacher, url, names_list, comments_list, created_time_list, course_times_list, voteup_list, rating_list
+    @return:  course_name, teacher, url, names_list, comments_list, created_time_list, course_time_list, voteup_list, rating_list
     '''
     driver.get(url)
     cont = driver.page_source
@@ -81,11 +81,11 @@ def parser_comments(url, driver):
     teacher = info(".cnt.f-fl").text().replace("\n", " ")
 
     # init the parameter list
-    userid_list = []  # userid_list
-    names_list = []  # nikename
+    user_id_list = []  # user_id
+    user_name_list = []  # user_name
     comments_list = []  # comments
     created_time_list = []  # created_time
-    course_times_list = []  # course_times
+    course_time_list = []  # course_time
     voteup_list = []  # voteup
     rating_list = []  # rating
 
@@ -101,7 +101,7 @@ def parser_comments(url, driver):
 
             for ctt in content:
 
-                author_name = ctt.find_all(
+                user_names = ctt.find_all(
                     'a', {
                         'class':
                             'primary-link ux-mooc-comment-course-comment_comment-list_item_body_user-info_name'
@@ -124,16 +124,16 @@ def parser_comments(url, driver):
                 voteup = ctt.find_all('span', {'primary-link'})
                 rating = ctt.find_all('div', {"star-point"})
 
-                for userid in author_name:
-                    userid_list.append(userid.get('href').split('=')[-1])
-                for name in author_name:
-                    names_list.append(name.text.strip())
+                for ui in user_names:
+                    user_id_list.append(ui.get('href').split('=')[-1])
+                for un in user_names:
+                    user_name_list.append(un.text.strip())
                 for comment in comments:
                     comments_list.append(comment.text.strip('\n'))
                 for ct in created_time:
-                    created_time_list.append(ct.text.strip())
+                    created_time_list.append(ct.text.replace('发表于', '').strip())
                 for cts in course_times:
-                    course_times_list.append(cts.text.strip())
+                    course_time_list.append(cts.text.strip())
                 for vt in voteup:
                     voteup_list.append(vt.text.strip('\n'))
                 for r in rating:
@@ -159,7 +159,7 @@ def parser_comments(url, driver):
             #
             #     for ctt in content:
             #
-            #         author_name = ctt.find_all(
+            #         user_name = ctt.find_all(
             #             'a', {
             #                 'class':
             #                 'primary-link ux-mooc-comment-course-comment_comment-list_item_body_user-info_name'
@@ -182,16 +182,16 @@ def parser_comments(url, driver):
             #         voteup = ctt.find_all('span', {'primary-link'})
             #         rating = ctt.find_all('div', {"star-point"})
             #
-            #         for userid in author_name:
-            #             userid_list.append(userid.get('href').split('=')[-1])
-            #         for name in author_name:
-            #             names_list.append(name.text)
+            #         for user_id in user_name:
+            #             user_id_list.append(user_id.get('href').split('=')[-1])
+            #         for name in user_name:
+            #             user_name_list.append(name.text)
             #         for comment in comments:
             #             comments_list.append(comment.text.strip('\n'))
             #         for ct in created_time:
             #             created_time_list.append(ct.text)
             #         for cts in course_times:
-            #             course_times_list.append(cts.text)
+            #             course_time_list.append(cts.text)
             #         for vt in voteup:
             #             voteup_list.append(vt.text.strip('\n'))
             #         for r in rating:
@@ -200,4 +200,4 @@ def parser_comments(url, driver):
         except Exception:
             break
 
-    return course_name, teacher, url, userid_list, names_list, comments_list, created_time_list, course_times_list, voteup_list, rating_list
+    return course_name, teacher, url, user_id_list, user_name_list, comments_list, created_time_list, course_time_list, voteup_list, rating_list
