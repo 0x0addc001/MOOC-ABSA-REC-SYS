@@ -30,23 +30,23 @@ w4 = 0.05
 alpha = 0.1
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    return 1.0 / (1.0 + math.exp(-x))
 
 # 计算单条评论的综合分数
 def calculate_comment_score(sentiment_probability, sentiment_polarity, rating, voteup, datediff):
     comment_score = sigmoid(w1 * sentiment_probability * sentiment_polarity +
-                           w2 * (rating-3)/2 +
+                           w2 * (rating - 3.0) / 2.0 +
                            w3 * 0.001 * voteup +
                            w4 * math.exp(-alpha * datediff))
     return comment_score
 
 # 计算单门课程的综合分数
 def calculate_course_score(comment_dataset):
-    score_sum = 0
-    num = 0
+    score_sum = 0.0
+    num = 0.0
     for comment_data in comment_dataset:
         score_sum += calculate_comment_score(comment_data["sentiment_probability"], comment_data["sentiment_polarity"], comment_data["rating"], comment_data["voteup"], comment_data["datediff"])
-        num += 1
+        num += 1.0
     course_score = score_sum / num
     return course_score
 
