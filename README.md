@@ -125,28 +125,28 @@ ps:看到App running at:Local: http://localhost:9528代表项目启动成功。�
 
 2.2. 数据库数据爬取：在数据库评论分析界面选择课程名称，点击数据爬取按钮进行爬取。
 
-  ![pic2](./pic/pic3.1.1.png)
-  ![pic2](./pic/pic3.1.2.png)
-  ![pic2](./pic/pic3.1.3.png)
+  ![pic3.1.1](./pic/pic3.1.1.png)
+  ![pic3.1.2](./pic/pic3.1.2.png)
+  ![pic3.1.3](./pic/pic3.1.3.png)
 
 2.2. 数据库评论方面级情感分析：在数据库评论分析界面选择课程名称，点击情感分析按钮进行情感分析预测。
 
-  ![pic2](./pic/pic3.2.1.png)
-  ![pic2](./pic/pic3.2.2.png)
+  ![pic3.2.1](./pic/pic3.2.1.png)
+  ![pic3.2.2](./pic/pic3.2.2.png)
 
 2.3. 分析结果可视化：一共有六种可视化图形，分别为：“方面频率词云图”、”方面频率柱状图”、”方面+观点词云图”、”方面+观点柱状图”、”方面+情感词云图”和”方面+情感柱状图”
 
-  ![pic2](./pic/pic3.3.1.png)
-  ![pic2](./pic/pic3.3.2.png)
-  ![pic2](./pic/pic3.3.3.png)
-  ![pic2](./pic/pic3.3.4.png)
-  ![pic2](./pic/pic3.3.5.png)
-  ![pic2](./pic/pic3.3.6.png)
+  ![pic3.3.1](./pic/pic3.3.1.png)
+  ![pic3.3.2](./pic/pic3.3.2.png)
+  ![pic3.3.3](./pic/pic3.3.3.png)
+  ![pic3.3.4](./pic/pic3.3.4.png)
+  ![pic3.3.5](./pic/pic3.3.5.png)
+  ![pic3.3.6](./pic/pic3.3.6.png)
 
 3. 课程推荐：在课程推荐界面选择课程、关注方面和难度系数进行推荐，点击推荐按钮即可查看推荐结果。
 
-  ![pic2](./pic/pic4.1.1.png)
-  ![pic2](./pic/pic4.1.2.png)
+  ![pic4.1.1](./pic/pic4.1.1.png)
+  ![pic4.1.2](./pic/pic4.1.2.png)
 
 # 四.参考学习资料：
 
