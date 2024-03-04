@@ -142,7 +142,6 @@ ps:看到App running at:Local: http://localhost:9528代表项目启动成功。�
   ![pic2](./pic/pic3.3.4.png)
   ![pic2](./pic/pic3.3.5.png)
   ![pic2](./pic/pic3.3.6.png)
-  ![pic2](./pic/pic3.3.7.png)
 
 3. 课程推荐：在课程推荐界面选择课程、关注方面和难度系数进行推荐，点击推荐按钮即可查看推荐结果。
 
