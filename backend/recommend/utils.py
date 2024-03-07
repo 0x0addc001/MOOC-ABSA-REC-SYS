@@ -32,7 +32,7 @@ alpha = 0.1
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(-x))
 
-# 计算单条评论的综合分数
+# 计算单门课程中单个方面下单条acos记录的综合分数
 def calculate_comment_score(sentiment_probability, sentiment_polarity, rating, voteup, datediff):
     comment_score = sigmoid(w1 * sentiment_probability * sentiment_polarity +
                            w2 * (rating - 3.0) / 2.0 +
