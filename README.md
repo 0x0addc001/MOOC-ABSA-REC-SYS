@@ -1,4 +1,5 @@
 # 项目名称：慕课评论方面级情感分析与推荐系统
+# PROJECT: MOOC-ABSA-REC-SYS, MARS
 
 ![pic1](./pic/pic1.png)
 
