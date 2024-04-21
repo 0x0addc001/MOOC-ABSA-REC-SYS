@@ -2,7 +2,7 @@ from backend.recommend.utils import *
 import MySQLdb
 
 # 数据库推荐函数
-def dbRecomm(course_key, concern_category, difficulty_coefficient):
+def dbRecomm(course_key, concern_category, difficulty_coefficient = 0.5):
     """
     Predict based on Taskflow.
     """

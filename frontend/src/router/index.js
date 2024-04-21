@@ -56,11 +56,11 @@ export const constantRoutes = [
   },
 
   {
-    path: '/analysis',
+    path: '/demo',
     component: Layout,
-    redirect: '/analysis/singleAnalysis',
-    name: 'Analysis',
-    meta: { title: '方面级情感分析', icon: 'el-icon-help' },
+    redirect: '/demo',
+    name: 'DEMO',
+    meta: { title: '功能体验模块', icon: 'el-icon-magic-stick' },
     children: [
       {
         path: 'singleAnalysis',
@@ -73,28 +73,28 @@ export const constantRoutes = [
         name: 'batchAnalysis',
         component: () => import('@/views/batchAnalysis/index'),
         meta: { title: '批量评论分析', icon: 'el-icon-document' }
-      },
-      {
-        path: 'dbAnalysis',
-        name: 'dbAnalysis',
-        component: () => import('@/views/dbAnalysis/index'),
-        meta: { title: '数据库评论分析', icon: 'el-icon-coin' }
       }
     ]
   },
 
   {
-    path: '/recommend',
+    path: '/mars',
     component: Layout,
-    redirect: '/recommend',
-    name: 'Recommend',
-    meta: { title: '课程推荐', icon: 'el-icon-discover' },
+    redirect: '/mars',
+    name: 'MARS',
+    meta: { title: '课程分析推荐模块', icon: 'el-icon-search' },
     children: [
+      {
+        path: 'dbAnalysis',
+        name: 'dbAnalysis',
+        component: () => import('@/views/dbAnalysis/index'),
+        meta: { title: '课程分析', icon: 'el-icon-data-analysis' }
+      },
       {
         path: 'recommend',
         name: 'recommend',
         component: () => import('@/views/recommend/index'),
-        meta: { title: '课程推荐', icon: 'el-icon-discover' }
+        meta: { title: '课程推荐', icon: 'el-icon-position' }
       }
     ]
   },

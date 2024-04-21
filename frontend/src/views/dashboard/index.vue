@@ -16,7 +16,7 @@ export default {
   name: 'Dashboard',
   data() {
     return {
-      url: require('/src/assets/img/image2.jpg')
+      url: require('/src/assets/img/mars.jpg')
     }
   },
   mounted() {
