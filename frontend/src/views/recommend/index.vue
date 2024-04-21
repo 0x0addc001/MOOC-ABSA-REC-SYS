@@ -22,7 +22,7 @@
         </el-option>
         </el-select>
         <br/>
-        您最适合的难度:
+        <!-- 您最适合的难度:
         <el-select v-model="difficulty_coefficient" placeholder="请选择您适合的难度" style="padding-top:10px; padding-bottom:10px;">
         <el-option
           v-for="item in difficulty_coefficient_options"
@@ -30,7 +30,7 @@
           :label="item.label"
           :value="item.value">
         </el-option>
-        </el-select>
+        </el-select> -->
       </div>
     </el-card>
     <el-row style="text-align: center; padding-top:20px; padding-bottom:20px;">
@@ -177,6 +177,7 @@ export default {
         that.visible = false
         return
       }
+      /*
       if (that.difficulty_coefficient === '') {
         this.$message({
           showClose: true,
@@ -187,6 +188,7 @@ export default {
         that.visible = false
         return
       }
+      */
       that.visible = true
       that.$message({
         showClose: true,
