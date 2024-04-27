@@ -4,12 +4,12 @@
 ![pic1](./pic/pic1.png)
 
 # 一. 项目简介
-慕课评论方面级情感分析与推荐系统，前后端分离式架构部署，支持单文本方面级情感分析及上传txt文件进行批量情感分析，并支持分析结果的可视化展示。
-技术栈：后端：FastAPI + UIE；前端：Vue + ElementUI + Echarts。
+
+慕课评论方面级情感分析与推荐系统，支持中国大学慕课网评论数据爬取、评论文本方面级情感分析、分析结果的可视化展示、基于评论文本方面级情感分析结果和其它评论数据的个性化推荐。
 
 # 二. 项目目录结构   
 
-项目采用前后端分离式架构，分为frontend和backend两个文件夹
+项目采用前后端分离式架构部署，分为frontend和backend两个文件夹
 
 * backend文件夹为后端接口服务模块，demo.py为模型预测演示程序，main.py为后端接口服务主程序，utils.py定义一些工具函数。
 * frontend文件夹为情感分析与推荐系统前端界面模块，基于 vue-admin-template进行开发。 核心关注src/router/index.js和src/views/两大模块，router中定义了界面路由即侧边栏选项框及映射关系，views文件夹下为搭建的新Web界面，包含欢迎页、单文本情感分析界面和批量文本情感分析界面。
@@ -162,7 +162,7 @@ ps:看到App running at:Local: http://localhost:9528代表项目启动成功。�
 
 1. 本项目采用的Web系统框架是Vue[1]（前端）+FastAPI[2]（后端），在vue-admin-template[3]模板系统框架的基础上二次开发，列表等展示使用ElementUI[4]组件，图表展示使用Echarts[5]组件。
 2. 本项目采用的爬虫组件是Selenium[6]。
-3. 本项目采用的深度学习模型是PaddleNLP的unified_sentiment_extraction[7]和multi_class[8]，其中unified_sentiment_extraction用于ACOS的AOS（Aspect-Opinon-Sentiment）分析，即对评论抽取AOS元组；[multi_class]用于ACOS的C（Class）分析，即对A（Aspect）分类。
+3. 本项目采用的深度学习模型是PaddleNLP的unified_sentiment_extraction[7]和multi_class[8]，其中unified_sentiment_extraction用于ACOS的AOS（Aspect-Opinon-Sentiment）分析，即对评论抽取AOS元组；multi_class用于ACOS的C（Class）分析，即对A（Aspect）分类。
 
 ```
 [1]:https://vuejs.org/
