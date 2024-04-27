@@ -158,15 +158,25 @@ ps:看到App running at:Local: http://localhost:9528代表项目启动成功。�
   ![pic4.1.1](./pic/pic4.1.1.png)
   ![pic4.1.2](./pic/pic4.1.2.png)
 
-# 四.参考学习资料：
+# 四. 参考开源代码与组件：
 
-1. FastAPI官方文档：https://fastapi.tiangolo.com/zh/
-2. Postman使用教程：https://mp.weixin.qq.com/s/IoseF-2Ma8mH2gdQLn1rUA
-3. Vue官方文档：https://v3.cn.vuejs.org/
-4. ElementUI文档：https://v3.cn.vuejs.org/
-5. vue-admin-template：https://github.com/PanJiaChen/vue-admin-template
-6. ECharts：https://echarts.apache.org/zh/index.html
+1. 本项目采用的Web系统框架是Vue[1]（前端）+FastAPI[2]（后端），在vue-admin-template[3]模板系统框架的基础上二次开发，列表等展示使用ElementUI[4]组件，图表展示使用Echarts[5]组件。
+2. 本项目采用的爬虫组件是Selenium[6]。
+3. 本项目采用的深度学习模型是PaddleNLP的unified_sentiment_extraction[7]和multi_class[8]，其中unified_sentiment_extraction用于ACOS的AOS（Aspect-Opinon-Sentiment）分析，即对评论抽取AOS元组；[multi_class]用于ACOS的C（Class）分析，即对A（Aspect）分类。
 
+```
+[1]:https://vuejs.org/
+[2]:https://fastapi.tiangolo.com/
+[3]:https://github.com/PanJiaChen/vue-admin-template
+[4]:https://element.eleme.cn/2.11/#/zh-CN
+[5]:https://echarts.apache.org/zh/index.html
+[6]:https://www.selenium.dev/
+[7]:https://github.com/PaddlePaddle/PaddleNLP/tree/develop/applications/sentiment_analysis/unified_sentiment_extraction
+[8]:https://github.com/PaddlePaddle/PaddleNLP/tree/develop/applications/text_classification/multi_class
+```
 
+# 五. 问题与解决方法：
 
-
+1. 模型文件checkpoint:
+- 问题：运行报错：`ValueError: (InvalidArgument) Deserialize to tensor failed, maybe the loaded file is not a paddle model(expected file format: 0, but 1936876918 found). [Hint: Expected version == 0U, but received version:1936876918 != 0U:0.] (at ..\paddle\fluid\framework\lod_tensor.cc:301) [operator < load_combine > error]`
+- 解决方法：出现这个问题应该是因为模型文件checkpoint[https://github.com/Deepennn/MOOC-ABSA-REC-SYS/tree/master/backend/multi_class/checkpoint]git上传时损坏，我已将模型文件压缩包上传至百度网盘[链接：https://pan.baidu.com/s/1klusmEqUbKSuzYhLAclKDA?pwd=MARS 提取码：MARS --来自百度网盘超级会员V4的分享]，解压后在项目中替换即可。
