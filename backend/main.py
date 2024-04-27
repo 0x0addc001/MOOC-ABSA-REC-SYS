@@ -149,7 +149,7 @@ def main():
         try:
             # 将添加时间标记重命名避免重复
             now_time = int(time.mktime(time.localtime(time.time())))
-            filePath = "./text_resource/" + str(now_time) + "_" + fileName
+            filePath = "./unified_sentiment_extraction/text_resource/" + str(now_time) + "_" + fileName
             # 将用户上传的文件保存到本地
             fout = open(filePath, 'wb')
             fout.write(fileBytes)
