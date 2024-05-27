@@ -38,63 +38,73 @@
       </el-table>
     </el-card>
 
-    <el-card v-show="visible" class="box-card">
-      <div v-show="visible" class="tip">
-        数据库情感分析结果：
-      </div>
-      <el-table
-        id="excel"
-        :data="analysisResults"
-        height="290"
-        border
-        style="width: 100%"
-      >
-        <el-table-column
-          prop="aspect"
-          label="方面"
-        />
-        <el-table-column
-          prop="category"
-          label="类别"
-        />
-        <el-table-column
-          prop="opinions"
-          label="观点"
-        />
-        <el-table-column
-          prop="sentiment"
-          label="情感"
-        />
-      </el-table>
-      <el-row style="text-align: center; padding-top:20px;padding-bottom:20px;">
-        <el-button type="primary" round @click="aspect_wc_visual()">方面频率词云图</el-button>
-        <el-button type="primary" round @click="aspect_hist_visual()">方面频率柱状图</el-button>
-        <el-button type="primary" round @click="aspect_opinion_wc_visual()">方面+观点词云图</el-button>
-        <el-button type="primary" round @click="aspect_opinion_hist_visual()">方面+观点柱状图</el-button>
-        <el-button type="primary" round @click="aspect_sentiment_wc_visual()">方面+情感词云图</el-button>
-        <el-button type="primary" round @click="aspect_sentiment_hist_visual()">方面+情感柱状图</el-button>
-      </el-row>
-    </el-card>
-    <el-row style="text-align: center; padding-top:10px;padding-bottom:10px;"></el-row>
-    <!--分析结果可视化-->
-    <el-card v-show="aw_visible" class="box-card">
-      <div ref="aspect_wc" class="chart-container"/>
-    </el-card>
-    <el-card v-show="ah_visible" class="box-card" >
-      <div ref="aspect_hist" class="chart-container"/>
-    </el-card>
-    <el-card v-show="aow_visible" class="box-card">
-      <div ref="aspect_opinion_wc" class="chart-container"/>
-    </el-card>
-    <el-card v-show="aoh_visible" class="box-card">
-      <div ref="aspect_opinion_hist" class="chart-container" />
-    </el-card>
-    <el-card v-show="asw_visible" class="box-card">
-      <div ref="aspect_sentiment_wc" class="chart-container" />
-    </el-card>
-    <el-card v-show="ash_visible" class="box-card">
-      <div ref="aspect_sentiment_hist" class="chart-container" />
-    </el-card>
+    <el-collapse v-model="collapseVisible" v-if="hasAnalysis">
+      <el-collapse-item v-for="course in courses" :key="course.name" :title="course.name" :name="course.name" >
+        <el-card class="box-card">
+          <div class="tip">
+            数据库情感分析结果：
+          </div>
+          <!-- 数据表格 -->
+          <el-table
+            id="excel"
+            :data="course.analysisResults"
+            height="290"
+            border
+            style="width: 100%"
+          >
+            <!-- 表格列 -->
+            <el-table-column
+              prop="aspect"
+              label="方面"
+            />
+            <el-table-column
+              prop="category"
+              label="类别"
+            />
+            <el-table-column
+              prop="opinions"
+              label="观点"
+            />
+            <el-table-column
+              prop="sentiment"
+              label="情感"
+            />
+          </el-table>
+          <!-- 按钮行 -->
+          <el-row style="text-align: center; padding-top:20px;padding-bottom:20px;">
+            <!-- 按钮触发对应的可视化功能 -->
+            <el-button type="primary" round @click="aspect_wc_visual(course)">方面频率词云图</el-button>
+            <el-button type="primary" round @click="aspect_hist_visual(course)">方面频率柱状图</el-button>
+            <el-button type="primary" round @click="aspect_opinion_wc_visual(course)">方面+观点词云图</el-button>
+            <el-button type="primary" round @click="aspect_opinion_hist_visual(course)">方面+观点柱状图</el-button>
+            <el-button type="primary" round @click="aspect_sentiment_wc_visual(course)">方面+情感词云图</el-button>
+            <el-button type="primary" round @click="aspect_sentiment_hist_visual(course)">方面+情感柱状图</el-button>
+          </el-row>
+        </el-card>
+
+        <!-- 可视化结果 -->
+        <el-card>
+          <el-row v-show="course.aw_visible" class="box-card">
+            <div :id="'aspect_wc' + course.name" :ref="'aspect_wc'+course.name" class="chart-container"/>
+          </el-row>
+          <el-row v-show="course.ah_visible" class="box-card" >
+            <div :id="'aspect_hist'+course.name" :ref="'aspect_hist'+course.name" class="chart-container"/>
+          </el-row>
+          <el-row v-show="course.aow_visible" class="box-card">
+            <div :id="'aspect_opinion_wc' + course.name" :ref="'aspect_opinion_wc'+course.name" class="chart-container"/>
+          </el-row>
+          <el-row v-show="course.aoh_visible" class="box-card">
+            <div :id="'aspect_opinion_hist' + course.name" :ref="'aspect_opinion_hist'+course.name" class="chart-container" />
+          </el-row>
+          <el-row v-show="course.asw_visible" class="box-card">
+            <div :id="'aspect_sentiment_wc' + course.name" :ref="'aspect_sentiment_wc'+course.name" class="chart-container" />
+          </el-row>
+          <el-row v-show="course.ash_visible" class="box-card">
+            <div :id="'aspect_sentiment_hist' + course.name" :ref="'aspect_sentiment_hist'+course.name" class="chart-container" />
+          </el-row>
+        </el-card>
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
@@ -105,26 +115,96 @@ import 'echarts-wordcloud'
 export default {
   data() {
     return {
-      analysisResults: '',
-      spiderResults: '',
-      aspect_wc_data: '',
-      aspect_hist_x_data: '',
-      aspect_hist_y_data: '',
-      aspect_opinion_wc_data: '',
-      aspect_opinion_hist_x_data: '',
-      aspect_opinion_hist_y_data: '',
-      aspect_sentiment_wc_data: '',
-      aspect_sentiment_hist_x_data: '',
-      aspect_sentiment_positives: '',
-      aspect_sentiment_negatives: '',
-      visible: false,
-      sp_visible: false,
-      aw_visible: false,
-      ah_visible: false,
-      aow_visible: false,
-      aoh_visible: false,
-      asw_visible: false,
-      ash_visible: false,
+      courses: [
+      {
+        name: '数据结构',
+        analysisResults: [],
+        aspect_wc_data: [],
+        aspect_hist_x_data: [],
+        aspect_hist_y_data: [],
+        aspect_opinion_wc_data: [],
+        aspect_opinion_hist_x_data: [],
+        aspect_opinion_hist_y_data: [],
+        aspect_sentiment_wc_data: [],
+        aspect_sentiment_hist_x_data: [],
+        aspect_sentiment_positives: [],
+        aspect_sentiment_negatives: [],
+        visible: false,
+        sp_visible: false,
+        aw_visible: false,
+        ah_visible: false,
+        aow_visible: false,
+        aoh_visible: false,
+        asw_visible: false,
+        ash_visible: false,
+      },
+      {
+        name: '操作系统',
+        analysisResults: [],
+        aspect_wc_data: [],
+        aspect_hist_x_data: [],
+        aspect_hist_y_data: [],
+        aspect_opinion_wc_data: [],
+        aspect_opinion_hist_x_data: [],
+        aspect_opinion_hist_y_data: [],
+        aspect_sentiment_wc_data: [],
+        aspect_sentiment_hist_x_data: [],
+        aspect_sentiment_positives: [],
+        aspect_sentiment_negatives: [],
+        visible: false,
+        sp_visible: false,
+        aw_visible: false,
+        ah_visible: false,
+        aow_visible: false,
+        aoh_visible: false,
+        asw_visible: false,
+        ash_visible: false,
+      },
+      {
+        name: '计算机组成原理',
+        analysisResults: [],
+        aspect_wc_data: [],
+        aspect_hist_x_data: [],
+        aspect_hist_y_data: [],
+        aspect_opinion_wc_data: [],
+        aspect_opinion_hist_x_data: [],
+        aspect_opinion_hist_y_data: [],
+        aspect_sentiment_wc_data: [],
+        aspect_sentiment_hist_x_data: [],
+        aspect_sentiment_positives: [],
+        aspect_sentiment_negatives: [],
+        visible: false,
+        sp_visible: false,
+        aw_visible: false,
+        ah_visible: false,
+        aow_visible: false,
+        aoh_visible: false,
+        asw_visible: false,
+        ash_visible: false,
+      },
+      {
+        name: '计算机网络',
+        analysisResults: [],
+        aspect_wc_data: [],
+        aspect_hist_x_data: [],
+        aspect_hist_y_data: [],
+        aspect_opinion_wc_data: [],
+        aspect_opinion_hist_x_data: [],
+        aspect_opinion_hist_y_data: [],
+        aspect_sentiment_wc_data: [],
+        aspect_sentiment_hist_x_data: [],
+        aspect_sentiment_positives: [],
+        aspect_sentiment_negatives: [],
+        visible: false,
+        sp_visible: false,
+        aw_visible: false,
+        ah_visible: false,
+        aow_visible: false,
+        aoh_visible: false,
+        asw_visible: false,
+        ash_visible: false,
+      }
+      ],
       options: [{
           value: '数据结构',
           label: '数据结构'
@@ -138,7 +218,8 @@ export default {
           value: '计算机网络',
           label: '计算机网络'
         }],
-        course_key: ''
+      course_key: '',
+      hasAnalysis:false
     }
   },
   methods: {
@@ -176,44 +257,40 @@ export default {
     // 数据库情感分析
     dbEmotionAnalysis() {
       var that = this
-      // 判断用户是否已经选择要进行数据库情感分析的课程
-      if (that.course_key === '') {
-        this.$message({
-          showClose: true,
-          message: '请先选择要进行数据库情感分析的课程！',
-          type: 'warning'
-        })
-        that.analysisResults = ''
-        that.visible = false
-        return
-      }
+      
+      that.hasAnalysis = true;
       that.visible = true
       that.$message({
         showClose: true,
         message: '数据库情感分析开始！请稍等！',
         type: 'success'
       })
+
+      this.courses.forEach(course=>{
       axios.post('http://127.0.0.1:8000/v1/dbEmotionAnalysis', {
-        course_key: that.course_key
+        course_key: course.name
       }).then((response) => {
         // 获取接口返回的情感分析预测结果并更新界面数据
-        that.analysisResults = response.data.dbAnalysisResults
-        that.aspect_wc_data = response.data.aspect_wc_data
-        that.aspect_hist_x_data = response.data.aspect_hist_x_data
-        that.aspect_hist_y_data = response.data.aspect_hist_y_data
-        that.aspect_opinion_wc_data = response.data.aspect_opinion_wc_data
-        that.aspect_opinion_hist_x_data = response.data.aspect_opinion_hist_x_data
-        that.aspect_opinion_hist_y_data = response.data.aspect_opinion_hist_y_data
-        that.aspect_sentiment_wc_data = response.data.aspect_sentiment_wc_data
-        that.aspect_sentiment_hist_x_data = response.data.aspect_sentiment_hist_x_data
-        that.aspect_sentiment_positives = response.data.aspect_sentiment_positives
-        that.aspect_sentiment_negatives = response.data.aspect_sentiment_negatives
-        that.visible = true
+        course.analysisResults = response.data.dbAnalysisResults
+        course.aspect_wc_data = response.data.aspect_wc_data
+        course.aspect_hist_x_data = response.data.aspect_hist_x_data
+        course.aspect_hist_y_data = response.data.aspect_hist_y_data
+        course.aspect_opinion_wc_data = response.data.aspect_opinion_wc_data
+        course.aspect_opinion_hist_x_data = response.data.aspect_opinion_hist_x_data
+        course.aspect_opinion_hist_y_data = response.data.aspect_opinion_hist_y_data
+        course.aspect_sentiment_wc_data = response.data.aspect_sentiment_wc_data
+        course.aspect_sentiment_hist_x_data = response.data.aspect_sentiment_hist_x_data
+        course.aspect_sentiment_positives = response.data.aspect_sentiment_positives
+        course.aspect_sentiment_negatives = response.data.aspect_sentiment_negatives
+        course.visible = true
+
         that.$message({
           showClose: true,
-          message: '数据库情感分析完成！',
+          message: '数据库情感分析'+course.name+'完成！',
           type: 'success'
         })
+
+        
       }).catch((error) => {
         console.log(error)
         that.analysisResults = ''
@@ -224,7 +301,9 @@ export default {
           type: 'error'
         })
       })
+      })
     },
+
     // 数据库数据爬取
     spiderToDb() {
       var that = this
@@ -266,13 +345,14 @@ export default {
         })
       })
     },
+
     // 数据库分析结果可视化
     // 图1
-    aspect_wc_visual() {
-      var that = this
+    aspect_wc_visual(course) {
+      var that = course
       that.aw_visible = true; that.ah_visible = false; that.aow_visible = false;
       that.aoh_visible = false; that.asw_visible = false; that.ash_visible = false;
-      var aspect_wc_chart = echarts.init(this.$refs.aspect_wc);
+      var aspect_wc_chart = echarts.init(document.getElementById('aspect_wc' + course.name));
       var aspect_wc_option = {
         series: [{
           type: 'wordCloud',
@@ -291,17 +371,18 @@ export default {
               );
             },
           },
-          data: this.aspect_wc_data
+          data: course.aspect_wc_data
         }]
       };
       aspect_wc_chart.setOption(aspect_wc_option);
+    
     },
     // 图2
-    aspect_hist_visual() {
-      var that = this
+    aspect_hist_visual(course) {
+      var that = course
       that.aw_visible = false;  that.ah_visible = true;   that.aow_visible = false;
       that.aoh_visible = false; that.asw_visible = false; that.ash_visible = false;
-      var aspect_hist_chart = echarts.init(this.$refs.aspect_hist);
+      var aspect_hist_chart = echarts.init(document.getElementById('aspect_hist' + course.name));
       var aspect_hist_option = {
         title: {
           text: 'The histogram of aspect/frequency', // 设置图表标题
@@ -317,7 +398,7 @@ export default {
           nameLocation: 'middle', // 设置标题位置
           nameGap: 50, // 设置标题与轴线之间的距离
           type: 'category',
-          data: this.aspect_hist_x_data,
+          data: course.aspect_hist_x_data,
           boundaryGap: ['10%','10%'],   //两边留白
           axisLabel: {  //x轴文字的配置
             show: true,
@@ -340,22 +421,22 @@ export default {
           axisTick:{show:true}
         }],
         series: [{
-          data: this.aspect_hist_y_data,
+          data: course.aspect_hist_y_data,
           type: 'bar'
         },
         {
-          data: this.aspect_hist_y_data,
+          data: course.aspect_hist_y_data,
           type: 'line'
         }]
       };
       aspect_hist_chart.setOption(aspect_hist_option);
     },
     // 图3
-    aspect_opinion_wc_visual() {
-      var that = this
+    aspect_opinion_wc_visual(course) {
+      var that = course
       that.aw_visible = false;  that.ah_visible = false;  that.aow_visible = true;
       that.aoh_visible = false; that.asw_visible = false; that.ash_visible = false;
-      var aspect_opinion_wc_chart = echarts.init(this.$refs.aspect_opinion_wc);
+      var aspect_opinion_wc_chart = echarts.init(document.getElementById('aspect_opinion_wc' + course.name));
       var aspect_opinion_wc_option = {
         series: [{
           type: 'wordCloud',
@@ -374,17 +455,17 @@ export default {
               );
             },
           },
-          data: this.aspect_opinion_wc_data
+          data: course.aspect_opinion_wc_data
         }]
       };
       aspect_opinion_wc_chart.setOption(aspect_opinion_wc_option);
     },
     // 图4
-    aspect_opinion_hist_visual() {
-      var that = this
+    aspect_opinion_hist_visual(course) {
+      var that = course
       that.aw_visible = false; that.ah_visible = false;  that.aow_visible = false;
       that.aoh_visible = true; that.asw_visible = false; that.ash_visible = false;
-      var aspect_opinion_hist_chart = echarts.init(this.$refs.aspect_opinion_hist);
+      var aspect_opinion_hist_chart = echarts.init(document.getElementById('aspect_opinion_hist' + course.name));
       var aspect_opinion_hist_option = {
         title: {
           text: 'The histogram of aspect with opinion/frequency', // 设置图表标题
@@ -400,7 +481,7 @@ export default {
           nameLocation: 'middle', // 设置标题位置
           nameGap: 50, // 设置标题与轴线之间的距离
           type: 'category',
-          data: this.aspect_opinion_hist_x_data,
+          data: course.aspect_opinion_hist_x_data,
           boundaryGap: ['10%','10%'],   //两边留白
           axisLabel: {  //x轴文字的配置
             show: true,
@@ -423,22 +504,22 @@ export default {
           axisTick:{show:true},
         }],
         series: [{
-          data: this.aspect_opinion_hist_y_data,
+          data: course.aspect_opinion_hist_y_data,
           type: 'bar'
         },
         {
-          data: this.aspect_opinion_hist_y_data,
+          data: course.aspect_opinion_hist_y_data,
           type: 'line'
         }]
       };
       aspect_opinion_hist_chart.setOption(aspect_opinion_hist_option);
     },
     // 图5
-    aspect_sentiment_wc_visual() {
-      var that = this
+    aspect_sentiment_wc_visual(course) {
+      var that = course
       that.aw_visible = false;  that.ah_visible = false;  that.aow_visible = false;
       that.aoh_visible = false; that.asw_visible = true; that.ash_visible = false;
-      var aspect_sentiment_wc_chart = echarts.init(this.$refs.aspect_sentiment_wc);
+      var aspect_sentiment_wc_chart = echarts.init(document.getElementById('aspect_sentiment_wc' + course.name));
       var aspect_sentiment_wc_option = {
         series: [{
           type: 'wordCloud',
@@ -457,7 +538,7 @@ export default {
               );
             },
           },
-          data: this.aspect_sentiment_wc_data
+          data: course.aspect_sentiment_wc_data
         }]
       };
       aspect_sentiment_wc_chart.setOption(aspect_sentiment_wc_option);
@@ -467,7 +548,7 @@ export default {
       var that = this
       that.aw_visible = false;  that.ah_visible = false;  that.aow_visible = false;
       that.aoh_visible = false; that.asw_visible = false; that.ash_visible = true;
-      var aspect_sentiment_hist_chart = echarts.init(this.$refs.aspect_sentiment_hist);
+      var aspect_sentiment_hist_chart = echarts.init(document.getElementById('aspect_sentiment_hist_' + course.name));
       var aspect_sentiment_hist_option = {
         title: {
           text: 'The histogram of aspect/sentiment', // 设置图表标题
@@ -486,7 +567,7 @@ export default {
           nameLocation: 'middle', // 设置标题位置
           nameGap: 50, // 设置标题与轴线之间的距离
           type: 'category',
-          data: this.aspect_sentiment_hist_x_data,
+          data: course.aspect_sentiment_hist_x_data,
           boundaryGap: ['10%','10%'],   //两边留白
           axisLabel: {  //x轴文字的配置
             show: true,
@@ -510,12 +591,12 @@ export default {
         }],
         series: [{
           name: 'positives',
-          data: this.aspect_sentiment_positives,
+          data: course.course.aspect_sentiment_positives,
           type: 'bar'
         },
         {
           name: 'negatives',
-          data: this.aspect_sentiment_negatives,
+          data: course.aspect_sentiment_negatives,
           type: 'bar'
         }]
       };
