@@ -1,6 +1,8 @@
 # 项目名称：慕课评论方面级情感分析与推荐系统
 # PROJECT: MOOC-ABSA-REC-SYS, MARS
 
+演示视频（Demo Video）：
+
 [![Demo](./pic/pic1.png)](https://youtu.be/bfZrwh14F68)
 
 # 一. 项目简介
