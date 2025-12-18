@@ -1,11 +1,39 @@
 # 项目名称：慕课评论方面级情感分析与推荐系统
 # PROJECT: MOOC-ABSA-REC-SYS, MARS
 
-![pic1](./pic/pic1.png)
+[![Demo](./pic/pic1.png)](https://youtu.be/bfZrwh14F68)
 
 # 一. 项目简介
 
-慕课评论方面级情感分析与推荐系统，支持中国大学慕课网评论数据爬取、评论文本方面级情感分析、分析结果的可视化展示、基于评论文本方面级情感分析结果和其它评论数据的个性化推荐。
+## 1.1 概述
+
+慕课评论方面级情感分析与推荐系统（MARS，MOOC-ABSA-REC-SYS）支持中国大学慕课网评论数据爬取、评论文本方面级情感分析、分析结果的可视化展示、基于评论文本方面级情感分析结果和其它评论数据的个性化推荐。
+
+## 1.2 详情
+
+慕课评论方面级情感分析与推荐系统（MARS，MOOC-ABSA-REC-SYS）通过使用一种融合评论方面级情感分析的推荐算法，以求解决现有慕课平台课程信息过载、学习者选课困难、授课者忽视反馈的问题。我们首先将以上问题归结于授课反馈难以被充分挖掘和量化体现的问题，面对这个问题，我们通过阅读大量方面级情感分析论文，讨论认为使用ACOS（Aspect-Class-Opinon-Sentiment）方面级情感分析方法能够相对彻底地实现评论挖掘。但此时我们又遇到了原模型技术门槛高难以使用、作为训练集的MOOC评论数据爬取数量受限、数据标注耗费大量时间精力且准确性难以保证的问题，面对新的挑战，我们决定使用提供训练参数、模型先进优异且代码文档清晰的PaddleNLP的通用信息抽取模型UIE（Universal Information Extraction）和通用文本分类模型UTC（Universal Text Classfication）集成新的ACOS模型作为预训练模型UACOS（Universal ACOS），其中UIE用于ACOS的AOS（Aspect-Opinon-Sentiment）分析，即对评论抽取AOS元组；UTC用于ACOS的C（Class）分析，即对A（Aspect）分类。我们再借用迁移学习的思想，通过使用我们自行爬取和标注的MOOC评论数据作为训练集，在具有通用知识的UACOS模型上对两个子模型进行领域微调，得到最终模型MACOS（MOOC-ACOS）。在集成MACOS模型后，系统通过将海量课程评论进行情感分析和可视化展示，可以为学习者提供可解释的个性化推荐以协助优化选课体验、促进提升学习效果，并为授课者提供可追溯的方面级分析以协助调整授课方式、促进提高授课质量。在使用“慕课评论方面级情感分析与推荐系统”后，学习者可以通过选择目标课程和关注方面快速定位适合自己的课程候选，授课者可以通过查看所授课程的方面级情感分析结果调整授课方式以满足学习者需求。
+
+---
+
+## 1.1 Overview:
+
+The MOOC-ABSA-REC-SYS (MARS), a MOOC Review Aspect-Based Sentiment Analysis and Recommendation System, supports scraping comment data from the Chinese MOOC platform (icourse163.org), performing aspect-based sentiment analysis on the review texts, visualizing the analysis results, and providing personalized recommendations based on the outcomes of this analysis and other review data.
+
+## 1.2 Details:
+
+The MOOC-ABSA-REC-SYS (MARS) aims to address prevalent issues in existing MOOC platforms, such as course information overload, difficulties learners face in course selection, and instructors' potential neglect of feedback. It does so by employing a novel recommendation algorithm that integrates aspect-based sentiment analysis of reviews.
+
+We attribute these core issues to the challenge of insufficiently mining and quantitatively representing learner feedback. To tackle this, after extensive research into aspect-based sentiment analysis (ABSA) literature, we identified the ACOS (Aspect-Class-Opinion-Sentiment) method as a promising approach for thorough comment analysis. However, its implementation presented new challenges: the high technical barrier of the original model, limited availability of scraped MOOC comment data for training sets, and the significant time, effort, and accuracy concerns associated with manual data annotation.
+
+To overcome these hurdles, we developed a new pre-trained model named UACOS (Universal ACOS). This model integrates the state-of-the-art Universal Information Extraction (UIE) and Universal Text Classification (UTC) models from PaddleNLP, renowned for their provided training parameters, excellent performance, and clear documentation. Within UACOS, the UIE component handles the AOS (Aspect-Opinion-Sentiment) analysis, extracting AOS tuples from comments. The UTC component performs the C (Class) analysis, classifying the identified aspects.
+
+Leveraging transfer learning, we then fine-tuned the two sub-models of UACOS on a domain-specific training set comprised of our self-scraped and manually annotated MOOC comments. This process yielded our final domain-adapted model, MACOS (MOOC-ACOS).
+
+By integrating the MACOS model, the system processes vast amounts of course reviews for sentiment analysis and visualization. This capability enables two primary functions:
+1.  For learners, it provides interpretable, personalized recommendations to optimize course selection and enhance learning outcomes.
+2.  For instructors, it offers traceable, aspect-level analysis to assist in refining teaching methods and improving course quality.
+
+Consequently, using the "MOOC Review Aspect-Based Sentiment Analysis and Recommendation System," learners can quickly identify suitable course candidates by specifying target courses and aspects of interest. Instructors can adjust their teaching approaches based on the visualized aspect-level sentiment analysis results for their courses, better aligning with learner needs.
 
 # 二. 项目目录结构   
 
@@ -71,7 +99,7 @@ paddle.utils.run_check()
 
 ```bash
 # pip install --upgrade paddlenlp
-pip install paddlenlp==2.5.2
+pip install paddlenlp==2.6.1
 ```
 
 下载后端依赖Web框架FastAPI
