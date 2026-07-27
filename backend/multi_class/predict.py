@@ -3,7 +3,7 @@ from paddlenlp import Taskflow
 def load_model():
     #  修改 with open(filename, 'r', encoding='utf-8') as f:
     #  task_path='../multi_class/checkpoint/export' # 需要根据执行文件换路径
-    cls = Taskflow("text_classification", task_path='./multi_class/checkpoint/export', is_static_model=True)
+    cls = Taskflow("text_classification", task_path='./multi_class/checkpoint/export', is_static_model=True, encoding='utf-8')
     return cls
 
 def predict(cls, input_list):
